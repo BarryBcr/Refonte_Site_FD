@@ -1,0 +1,607 @@
+/* Cartes de services */
+.service-card {
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(179, 136, 255, 0.2);
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 20px rgba(179, 136, 255, 0.4);
+    border: 1px solid rgba(179, 136, 255, 0.5);
+}
+
+.service-icon {
+    transition: all 0.3s ease;
+}
+
+.service-card:hover .service-icon {
+    transform: scale(1.1);
+}
+
+/* Bordures animées */
+.animated-border {
+    position: relative;
+    border: 1px solid rgba(179, 136, 255, 0.3);
+    overflow: hidden;
+}
+
+.animated-border::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #b388ff);
+    animation: animate 3s linear infinite;
+}
+
+/* Formulaires */
+.form-input {
+    background-color: #121212;
+    border: 1px solid rgba(179, 136, 255, 0.3);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #b388ff;
+    box-shadow: 0 0 0 3px rgba(179, 136, 255, 0.1);
+}
+
+.form-input::placeholder {
+    color: #9ca3af;
+}
+
+/* Boutons */
+.btn-primary {
+    background: linear-gradient(135deg, #b388ff 0%, #9b6dff 100%);
+    color: #121212;
+    font-weight: 500;
+    padding: 0.75rem 2rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(179, 136, 255, 0.3);
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(179, 136, 255, 0.5);
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 1px solid #b388ff;
+    color: #b388ff;
+    font-weight: 500;
+    padding: 0.75rem 2rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background: #b388ff;
+    color: #121212;
+}
+
+/* Cartes d'information */
+.info-card {
+    background: rgba(45, 45, 45, 0.7);
+    border: 1px solid rgba(179, 136, 255, 0.2);
+    border-radius: 0.75rem;
+    padding: 2rem;
+    transition: all 0.3s ease;
+}
+
+/* Calendrier Google */
+.calendar-wrapper {
+    background: #ffffff;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(179, 136, 255, 0.2);
+    border: 1px solid rgba(179, 136, 255, 0.3);
+}
+
+.calendar-wrapper iframe {
+    background-color: #ffffff !important;
+    border: none;
+    border-radius: 0.75rem;
+}
+
+.info-card:hover {
+    border-color: rgba(179, 136, 255, 0.4);
+    box-shadow: 0 0 15px rgba(179, 136, 255, 0.2);
+}
+
+/* Avantages */
+.advantage-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: rgba(179, 136, 255, 0.1);
+    border-radius: 0.5rem;
+    border: 1px solid rgba(179, 136, 255, 0.2);
+    margin-bottom: 1rem;
+}
+
+.advantage-item svg {
+    color: #b388ff;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+}
+
+/* Contact info */
+.contact-info-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 1rem;
+    background: rgba(45, 45, 45, 0.7);
+    border-radius: 0.5rem;
+    border: 1px solid rgba(179, 136, 255, 0.2);
+    margin-bottom: 1rem;
+}
+
+.contact-info-item svg {
+    color: #b388ff;
+    margin-top: 0.25rem;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+}
+
+/* Footer */
+.footer-link {
+    color: #9ca3af;
+    transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+    color: #b388ff;
+}
+
+/* Social media icons */
+.social-icon {
+    color: #9ca3af;
+    transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+    color: #b388ff;
+    transform: translateY(-2px);
+}
+
+/* Newsletter form */
+.newsletter-form {
+    display: flex;
+    gap: 0;
+}
+
+.newsletter-input {
+    flex: 1;
+    background: #2d2d2d;
+    border: 1px solid rgba(179, 136, 255, 0.3);
+    border-radius: 0.5rem 0 0 0.5rem;
+    padding: 0.5rem 1rem;
+    color: #ffffff;
+}
+
+.newsletter-button {
+    background: #b388ff;
+    color: #121212;
+    padding: 0.5rem 1rem;
+    border-radius: 0 0.5rem 0.5rem 0;
+    transition: all 0.3s ease;
+}
+
+.newsletter-button:hover {
+    background: #9b6dff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .service-card {
+        margin-bottom: 2rem;
+    }
+    
+    .info-card {
+        margin-bottom: 2rem;
+    }
+    
+    .contact-info-item {
+        margin-bottom: 1rem;
+    }
+    
+    .newsletter-form {
+        flex-direction: column;
+    }
+    
+    .newsletter-input,
+    .newsletter-button {
+        border-radius: 0.5rem;
+    }
+} 
+
+/* Services Slider Styles */
+.services-slider-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+    width: 100%;
+    height: auto;
+    min-height: 400px;
+}
+
+.services-slider {
+    display: flex;
+    transition: transform 0.5s ease-out;
+    width: 300%; /* 3 slides * 100% each */
+    height: 100%;
+}
+
+.service-slide {
+    flex-shrink: 0;
+    width: 33.333333%; /* 100% / 3 slides */
+    padding: 0 0.5rem;
+    display: flex;
+    align-items: stretch;
+}
+
+/* Navigation Arrows */
+.slider-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: rgba(179, 136, 255, 0.1);
+    border: 2px solid rgba(179, 136, 255, 0.3);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.slider-nav-btn:hover {
+    background: rgba(179, 136, 255, 0.2);
+    border-color: rgba(179, 136, 255, 0.6);
+    box-shadow: 0 0 20px rgba(179, 136, 255, 0.4);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.slider-nav-btn:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.slider-nav-btn svg {
+    filter: drop-shadow(0 0 8px rgba(179, 136, 255, 0.6));
+}
+
+.slider-nav-prev {
+    left: 8px;
+}
+
+.slider-nav-next {
+    right: 8px;
+}
+
+/* Show arrows on hover/touch */
+.services-slider-container:hover .slider-nav-btn,
+.services-slider-container:active .slider-nav-btn {
+    opacity: 1;
+}
+
+/* Mobile touch feedback */
+@media (max-width: 768px) {
+    .slider-nav-btn {
+        opacity: 0.7;
+        width: 44px;
+        height: 44px;
+    }
+    
+    .services-slider-container:active .slider-nav-btn {
+        opacity: 1;
+    }
+    
+    .service-slide {
+        width: 66.666667%; /* Show 1.5 cards */
+    }
+    
+    .services-slider {
+        width: 450%; /* 3 slides * 150% each for 1.5 cards visible */
+    }
+    
+    .services-slider-container {
+        min-height: 320px;
+    }
+    
+    .service-card-mobile {
+        min-height: 280px;
+        padding: 1rem;
+    }
+}
+
+/* Slider card animations */
+.service-slide .service-card-mobile {
+    transform: scale(0.95);
+    opacity: 0.8;
+    transition: all 0.3s ease;
+}
+
+.service-slide.active .service-card-mobile {
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* Fade animation for slides */
+@keyframes slideFadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.service-slide {
+    animation: slideFadeIn 0.5s ease-out;
+}
+
+/* Glow effect for navigation arrows */
+.slider-nav-btn::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #b388ff, #9b6dff, #7c4dff, #b388ff);
+    border-radius: 50%;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.slider-nav-btn:hover::before {
+    opacity: 0.3;
+    animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Touch indicator */
+.services-slider-container::after {
+    content: '';
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: rgba(179, 136, 255, 0.3);
+    border-radius: 2px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.services-slider-container:active::after {
+    opacity: 1;
+} 
+
+/* 3D Card Effect for Services */
+.service-card-3d {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+}
+
+.card {
+  overflow: visible;
+  width: 100%;
+  height: 100%;
+  max-width: 350px;
+}
+
+.content {
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 300ms;
+  box-shadow: 0px 0px 20px 1px rgba(179, 136, 255, 0.3);
+  border-radius: 15px;
+}
+
+.front, .back {
+  background-color: #2d2d2d;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 15px;
+  overflow: hidden;
+  border: 1px solid rgba(179, 136, 255, 0.2);
+}
+
+.back {
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  transform: rotateY(180deg);
+}
+
+.back::before {
+  position: absolute;
+  content: ' ';
+  display: block;
+  width: 160px;
+  height: 160%;
+  background: linear-gradient(90deg, transparent, #b388ff, #b388ff, #b388ff, #b388ff, transparent);
+  animation: rotation_481 5000ms infinite linear;
+}
+
+.back-content {
+  position: absolute;
+  width: 99%;
+  height: 99%;
+  background-color: #2d2d2d;
+  border-radius: 15px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.card:hover .content {
+  transform: rotateY(180deg);
+}
+
+@keyframes rotation_481 {
+  0% {
+    transform: rotateZ(0deg);
+  }
+
+  100% {
+    transform: rotateZ(360deg);
+  }
+}
+
+.front {
+  transform: rotateY(0deg);
+  color: white;
+}
+
+.front .front-content {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.front-content .badge {
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 2px 10px;
+  border-radius: 10px;
+  backdrop-filter: blur(2px);
+  width: fit-content;
+}
+
+.description {
+  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+  border-radius: 5px;
+}
+
+.title {
+  font-size: 11px;
+  max-width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.title p {
+  width: 50%;
+}
+
+.card-footer {
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 5px;
+  font-size: 8px;
+}
+
+.front .img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.circle {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background-color: #b388ff;
+  position: relative;
+  filter: blur(15px);
+  animation: floating 2600ms infinite linear;
+}
+
+#bottom {
+  background-color: #9b6dff;
+  left: 50px;
+  top: 0px;
+  width: 150px;
+  height: 150px;
+  animation-delay: -800ms;
+}
+
+#right {
+  background-color: #7c4dff;
+  left: 160px;
+  top: -80px;
+  width: 30px;
+  height: 30px;
+  animation-delay: -1800ms;
+}
+
+@keyframes floating {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+/* Mobile Service Cards (without 3D effect) */
+.service-card-mobile {
+  background-color: #2d2d2d;
+  border: 1px solid rgba(179, 136, 255, 0.2);
+  box-shadow: 0px 0px 20px 1px rgba(179, 136, 255, 0.3);
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .service-card-3d {
+    display: none;
+  }
+} 

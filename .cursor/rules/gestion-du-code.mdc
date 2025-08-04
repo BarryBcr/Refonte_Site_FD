@@ -1,0 +1,4 @@
+---
+description: Regle de gestion des fichiers dans la code base. Lorsque tu genneres du code, pense à la modularité et à l'interconnection des fichiers. Fais en sorte dans la limite du possible de ne pas depasser 500 lignes de code par page.
+alwaysApply: false
+---

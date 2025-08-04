@@ -1,0 +1,110 @@
+/* Configuration Tailwind */
+tailwind.config = {
+    theme: {
+        extend: {
+            colors: {
+                'brand': '#b388ff',
+                'brand-dark': '#9b6dff',
+                'dark': '#121212',
+                'dark-light': '#1e1e1e',
+                'dark-lighter': '#2d2d2d'
+            }
+        }
+    }
+}
+
+/* Styles de base */
+body {
+    font-family: 'Poppins', sans-serif;
+    scroll-behavior: smooth;
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+.futuristic-font {
+    font-family: 'Orbitron', sans-serif;
+}
+
+/* Gradients et backgrounds */
+.gradient-bg {
+    background: linear-gradient(135deg, #121212 0%, #2d2d2d 100%);
+}
+
+.brand-gradient {
+    background: linear-gradient(135deg, #b388ff 0%, #9b6dff 100%);
+}
+
+/* Effets de lueur */
+.glow {
+    box-shadow: 0 0 15px rgba(179, 136, 255, 0.5);
+}
+
+.glow-text {
+    text-shadow: 0 0 10px rgba(179, 136, 255, 0.7);
+}
+
+/* Grille de fond */
+.grid-pattern {
+    background-image: 
+        linear-gradient(rgba(179, 136, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(179, 136, 255, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+/* Navigation */
+.nav-link {
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background-color: #b388ff;
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+/* Scrollbar personnalisée */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1e1e1e;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #b388ff;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #9b6dff;
+}
+
+/* Focus states */
+*:focus {
+    outline: 2px solid #b388ff;
+    outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+    background-color: rgba(179, 136, 255, 0.3);
+    color: #ffffff;
+} 

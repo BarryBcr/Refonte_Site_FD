@@ -1,0 +1,18 @@
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Fichiers temporaires
+*.tmp
+*.temp
+
+# Logs
+*.log
+
+# Dossiers de build (si ajoutés plus tard)
+dist/
+build/
+
+# Fichiers d'environnement (si ajoutés plus tard)
+.env
+.env.local 

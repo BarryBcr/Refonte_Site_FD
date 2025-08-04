@@ -1,0 +1,280 @@
+{
+  "brand": {
+    "name": "FlairDigital",
+    "tagline": "Acquisition Client & Automatisation",
+    "description": "Solutions personnalisées pour développer votre entreprise grâce à la publicité ciblée et l'automatisation intelligente."
+  },
+  "colors": {
+    "primary": {
+      "brand": "#b388ff",
+      "brand-dark": "#9b6dff",
+      "description": "Couleur principale de la marque, utilisée pour les accents et les éléments interactifs"
+    },
+    "background": {
+      "dark": "#121212",
+      "dark-light": "#1e1e1e",
+      "dark-lighter": "#2d2d2d",
+      "description": "Palette de fond sombre avec différentes nuances"
+    },
+    "text": {
+      "white": "#ffffff",
+      "gray-200": "#e0e0e0",
+      "gray-300": "#d1d5db",
+      "gray-400": "#9ca3af",
+      "description": "Couleurs de texte avec hiérarchie visuelle"
+    },
+    "gradients": {
+      "brand-gradient": "linear-gradient(135deg, #b388ff 0%, #9b6dff 100%)",
+      "background-gradient": "linear-gradient(135deg, #121212 0%, #2d2d2d 100%)",
+      "animated-gradient": "linear-gradient(-45deg, #b388ff, #9b6dff, #7c4dff, #b388ff)"
+    }
+  },
+  "typography": {
+    "fonts": {
+      "primary": "Poppins",
+      "futuristic": "Orbitron",
+      "description": "Poppins pour le texte général, Orbitron pour les titres et éléments futuristes"
+    },
+    "weights": {
+      "light": 300,
+      "normal": 400,
+      "medium": 500,
+      "semibold": 600,
+      "bold": 700
+    },
+    "sizes": {
+      "xs": "0.75rem",
+      "sm": "0.875rem",
+      "base": "1rem",
+      "lg": "1.125rem",
+      "xl": "1.25rem",
+      "2xl": "1.5rem",
+      "3xl": "1.875rem",
+      "4xl": "2.25rem",
+      "5xl": "3rem"
+    }
+  },
+  "spacing": {
+    "container": "container mx-auto px-4",
+    "section-padding": "py-16 md:py-24",
+    "card-padding": "p-8",
+    "button-padding": "px-8 py-3",
+    "input-padding": "px-4 py-3"
+  },
+  "components": {
+    "navigation": {
+      "background": "bg-dark-light shadow-lg fixed w-full z-10 border-b border-brand/20",
+      "links": "text-gray-300 hover:text-brand transition duration-300",
+      "mobile-menu": "bg-dark-light shadow-lg"
+    },
+    "buttons": {
+      "primary": {
+        "classes": "brand-gradient text-white font-medium rounded-lg glow hover:opacity-90 transition duration-300",
+        "description": "Bouton principal avec gradient et effet de lueur"
+      },
+      "secondary": {
+        "classes": "bg-transparent border border-brand text-brand font-medium rounded-lg hover:bg-brand hover:text-dark transition duration-300",
+        "description": "Bouton secondaire avec bordure et effet hover"
+      },
+      "small": {
+        "classes": "px-6 py-2 bg-brand text-dark font-medium rounded-lg hover:bg-brand-dark transition duration-300",
+        "description": "Bouton de petite taille pour les cartes"
+      }
+    },
+    "cards": {
+      "service-card": {
+        "classes": "bg-dark-lighter/50 rounded-xl p-8 transition duration-300 backdrop-filter blur(10px)",
+        "hover": "transform translateY(-5px) box-shadow: 0 0 20px rgba(179, 136, 255, 0.4)",
+        "description": "Carte de service avec effet de flou et animation au hover"
+      },
+      "info-card": {
+        "classes": "bg-dark-lighter/50 rounded-xl p-8 border border-brand/20",
+        "description": "Carte d'information avec bordure subtile"
+      },
+      "contact-card": {
+        "classes": "bg-brand/10 rounded-xl p-6 border border-brand/20",
+        "description": "Carte de contact avec fond coloré"
+      }
+    },
+    "forms": {
+      "input": {
+        "classes": "form-input w-full",
+        "styles": "background-color: #121212; border: 1px solid rgba(179, 136, 255, 0.3); border-radius: 0.5rem; padding: 0.75rem 1rem; color: #ffffff",
+        "focus": "border-color: #b388ff; box-shadow: 0 0 0 3px rgba(179, 136, 255, 0.1)"
+      },
+      "textarea": {
+        "classes": "form-input w-full",
+        "rows": 5
+      },
+      "select": {
+        "classes": "form-input w-full"
+      }
+    },
+    "icons": {
+      "service-icon": {
+        "classes": "bg-brand/20 rounded-full w-16 h-16 flex items-center justify-center",
+        "size": "w-8 h-8"
+      },
+      "contact-icon": {
+        "classes": "w-6 h-6 text-brand",
+        "margin": "mr-3"
+      },
+      "social-icon": {
+        "classes": "w-6 h-6 text-gray-400 hover:text-brand transition duration-300"
+      }
+    }
+  },
+  "effects": {
+    "glow": {
+      "text": "text-shadow: 0 0 10px rgba(179, 136, 255, 0.7)",
+      "box": "box-shadow: 0 0 15px rgba(179, 136, 255, 0.5)",
+      "button": "box-shadow: 0 0 15px rgba(179, 136, 255, 0.3)"
+    },
+    "animated-border": {
+      "classes": "animated-border",
+      "animation": "animate 3s linear infinite",
+      "description": "Bordure animée avec effet de balayage"
+    },
+    "grid-pattern": {
+      "background": "linear-gradient(rgba(179, 136, 255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(179, 136, 255, 0.1) 1px, transparent 1px)",
+      "size": "20px 20px"
+    }
+  },
+  "animations": {
+    "fadeInUp": {
+      "duration": "0.6s",
+      "easing": "ease-out",
+      "description": "Animation d'apparition vers le haut"
+    },
+    "fadeInLeft": {
+      "duration": "0.6s",
+      "easing": "ease-out",
+      "description": "Animation d'apparition depuis la gauche"
+    },
+    "fadeInRight": {
+      "duration": "0.6s",
+      "easing": "ease-out",
+      "description": "Animation d'apparition depuis la droite"
+    },
+    "pulse": {
+      "duration": "2s",
+      "description": "Animation de pulsation"
+    },
+    "float": {
+      "duration": "3s",
+      "easing": "ease-in-out",
+      "description": "Animation de flottement"
+    },
+    "rotate": {
+      "duration": "20s",
+      "description": "Animation de rotation lente"
+    }
+  },
+  "layout": {
+    "grid": {
+      "services": "grid grid-cols-1 md:grid-cols-3 gap-8",
+      "contact": "grid grid-cols-1 md:grid-cols-2 gap-12",
+      "footer": "grid grid-cols-1 md:grid-cols-4 gap-8"
+    },
+    "flex": {
+      "hero": "flex flex-col md:flex-row items-center",
+      "buttons": "flex flex-col sm:flex-row justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4",
+      "contact-info": "flex items-center"
+    }
+  },
+  "sections": {
+    "hero": {
+      "classes": "pt-24 pb-16 md:pt-32 md:pb-24 gradient-bg grid-pattern",
+      "title": "text-4xl md:text-5xl font-bold text-white leading-tight mb-6 futuristic-font glow-text",
+      "subtitle": "text-xl text-gray-300 mb-8"
+    },
+    "services": {
+      "classes": "py-16 md:py-24 bg-dark-light",
+      "title": "text-3xl md:text-4xl font-bold text-white mb-4 futuristic-font glow-text",
+      "subtitle": "text-xl text-gray-300 max-w-3xl mx-auto"
+    },
+    "contact": {
+      "classes": "py-16 md:py-24 bg-dark-light",
+      "title": "text-3xl md:text-4xl font-bold text-white mb-4 futuristic-font glow-text",
+      "subtitle": "text-xl text-gray-300 max-w-3xl mx-auto"
+    },
+    "footer": {
+      "classes": "bg-dark text-white py-12 border-t border-brand/20"
+    }
+  },
+  "responsive": {
+    "breakpoints": {
+      "sm": "640px",
+      "md": "768px",
+      "lg": "1024px",
+      "xl": "1280px"
+    },
+    "mobile": {
+      "navigation": "hidden md:hidden",
+      "menu-toggle": "md:hidden",
+      "grid": "grid-cols-1",
+      "flex": "flex-col"
+    }
+  },
+  "accessibility": {
+    "focus": {
+      "outline": "2px solid #b388ff",
+      "offset": "2px"
+    },
+    "selection": {
+      "background": "rgba(179, 136, 255, 0.3)",
+      "color": "#ffffff"
+    }
+  },
+  "scrollbar": {
+    "width": "8px",
+    "track": "#1e1e1e",
+    "thumb": "#b388ff",
+    "thumb-hover": "#9b6dff",
+    "border-radius": "4px"
+  },
+  "content": {
+    "services": [
+      {
+        "name": "Meta Ads",
+        "icon": "chart-bar",
+        "description": "Campagnes publicitaires ciblées sur Facebook et Instagram pour atteindre votre audience idéale et maximiser votre ROI.",
+        "features": [
+          "Stratégie publicitaire personnalisée",
+          "Ciblage précis des audiences",
+          "Optimisation continue des campagnes"
+        ]
+      },
+      {
+        "name": "Email Marketing",
+        "icon": "mail",
+        "description": "Stratégies de mailing efficaces pour convertir vos prospects, fidéliser vos clients et augmenter vos ventes.",
+        "features": [
+          "Création de séquences d'emails",
+          "Segmentation avancée",
+          "Analyse des performances"
+        ]
+      },
+      {
+        "name": "Automatisation",
+        "icon": "cog",
+        "description": "Solutions d'automatisation avec make.com et n8n pour optimiser vos processus et gagner du temps.",
+        "features": [
+          "Intégration d'applications",
+          "Workflows personnalisés",
+          "Automatisation des tâches répétitives"
+        ]
+      }
+    ],
+    "contact": {
+      "phone": "+33 6 41 81 61 49",
+      "email": "contact@flairdigital.fr",
+      "address": "123 Avenue de la Croissance, 75001 Paris, France",
+      "hours": {
+        "monday-friday": "9h00 - 18h00",
+        "saturday": "Sur rendez-vous",
+        "sunday": "Fermé"
+      }
+    }
+  }
+} 

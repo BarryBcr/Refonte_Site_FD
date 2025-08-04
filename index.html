@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlairDigital - Acquisition Client & Automatisation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link rel="stylesheet" href="styles/animations.css">
+</head>
+<body class="bg-dark text-gray-200">
+    <!-- Navigation -->
+    <nav class="bg-dark-light shadow-lg fixed w-full z-10 border-b border-brand/20">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="text-2xl font-bold text-brand glow-text futuristic-font">FlairDigital</div>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#accueil" class="nav-link text-gray-300 hover:text-brand transition duration-300">Accueil</a>
+                <a href="#services" class="nav-link text-gray-300 hover:text-brand transition duration-300">Services</a>
+                <a href="#pourquoi-nous" class="nav-link text-gray-300 hover:text-brand transition duration-300">Pourquoi nous</a>
+                <a href="#contact" class="nav-link text-gray-300 hover:text-brand transition duration-300">Contact</a>
+            </div>
+            <div class="md:hidden">
+                <button id="menu-toggle" class="focus:outline-none">
+                    <svg class="w-6 h-6 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-dark-light shadow-lg">
+            <div class="container mx-auto px-4 py-3 flex flex-col space-y-3">
+                <a href="#accueil" class="text-gray-300 hover:text-brand transition duration-300">Accueil</a>
+                <a href="#services" class="text-gray-300 hover:text-brand transition duration-300">Services</a>
+                <a href="#pourquoi-nous" class="text-gray-300 hover:text-brand transition duration-300">Pourquoi nous</a>
+                <a href="#contact" class="text-gray-300 hover:text-brand transition duration-300">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="accueil" class="pt-24 pb-16 md:pt-32 md:pb-24 gradient-bg grid-pattern">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 text-center md:text-left mb-10 md:mb-0">
+                    <h1 class="text-4xl md:text-5xl font-bold text-white leading-tight mb-6 futuristic-font glow-text">
+                        <span class="text-brand">Boostez</span> votre acquisition client et <span class="text-brand">automatisez</span> vos processus
+                    </h1>
+                    <p class="text-xl text-gray-300 mb-8">
+                        Solutions personnalisées pour développer votre entreprise grâce à la publicité ciblée et l'automatisation intelligente.
+                    </p>
+                    <div class="flex flex-col sm:flex-row justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4">
+                        <a href="#services" class="px-8 py-3 brand-gradient text-white font-medium rounded-lg glow hover:opacity-90 transition duration-300 text-center">
+                            Découvrir nos services
+                        </a>
+                        <a href="#contact" class="px-8 py-3 bg-transparent border border-brand text-brand font-medium rounded-lg hover:bg-brand hover:text-dark transition duration-300 text-center">
+                            Nous contacter
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2">
+                    <div class="relative animated-border rounded-xl p-4">
+                        <svg class="w-full h-auto" viewBox="0 0 500 400" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#b388ff;stop-opacity:0.2" />
+                                    <stop offset="100%" style="stop-color:#9b6dff;stop-opacity:0.1" />
+                                </linearGradient>
+                            </defs>
+                            <rect x="50" y="50" rx="20" ry="20" width="400" height="300" fill="url(#grad1)" />
+                            <circle cx="150" cy="120" r="30" fill="#b388ff" fill-opacity="0.2" />
+                            <circle cx="350" cy="120" r="20" fill="#b388ff" fill-opacity="0.2" />
+                            <circle cx="250" cy="200" r="40" fill="#b388ff" fill-opacity="0.2" />
+                            <path d="M100,250 Q250,300 400,250" stroke="#b388ff" stroke-width="5" fill="none" />
+                            <rect x="120" y="180" width="260" height="10" rx="5" ry="5" fill="#b388ff" fill-opacity="0.2" />
+                            <rect x="120" y="210" width="200" height="10" rx="5" ry="5" fill="#b388ff" fill-opacity="0.2" />
+                            <rect x="120" y="240" width="160" height="10" rx="5" ry="5" fill="#b388ff" fill-opacity="0.2" />
+                            
+                            <!-- Futuristic elements -->
+                            <circle cx="50" cy="50" r="5" fill="#b388ff" fill-opacity="0.8">
+                                <animate attributeName="opacity" values="0.8;0.2;0.8" dur="3s" repeatCount="indefinite" />
+                            </circle>
+                            <circle cx="450" cy="50" r="5" fill="#b388ff" fill-opacity="0.8">
+                                <animate attributeName="opacity" values="0.2;0.8;0.2" dur="4s" repeatCount="indefinite" />
+                            </circle>
+                            <circle cx="50" cy="350" r="5" fill="#b388ff" fill-opacity="0.8">
+                                <animate attributeName="opacity" values="0.5;0.9;0.5" dur="2.5s" repeatCount="indefinite" />
+                            </circle>
+                            <circle cx="450" cy="350" r="5" fill="#b388ff" fill-opacity="0.8">
+                                <animate attributeName="opacity" values="0.9;0.3;0.9" dur="3.5s" repeatCount="indefinite" />
+                            </circle>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Include remaining sections -->
+    <div id="remaining-sections"></div>
+
+    <script src="js/main.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/contact.js"></script>
+    <script>
+        // Chargement dynamique des sections
+        const sections = [
+            'sections/services.html',
+            'sections/pourquoi-nous.html',
+            'sections/cta.html',
+            'sections/contact.html',
+            'sections/footer.html'
+        ];
+        const container = document.getElementById('remaining-sections');
+        (async () => {
+            for (const url of sections) {
+                const resp = await fetch(url);
+                if (resp.ok) {
+                    const html = await resp.text();
+                    const temp = document.createElement('div');
+                    temp.innerHTML = html;
+                    // Ajoute chaque section à la suite
+                    while (temp.firstChild) {
+                        container.appendChild(temp.firstChild);
+                    }
+                }
+            }
+        })();
+    </script>
+</body>
+</html> 
