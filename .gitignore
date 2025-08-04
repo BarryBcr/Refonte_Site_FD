@@ -15,4 +15,8 @@ build/
 
 # Fichiers d'environnement (si ajoutés plus tard)
 .env
-.env.local 
+.env.local
+
+# Dossiers de développement
+.cursor/
+.gestion-du-code
