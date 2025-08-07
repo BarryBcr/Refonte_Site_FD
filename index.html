@@ -129,6 +129,17 @@
                     }
                 }
             }
+            // Initialize slider after all sections are loaded
+            console.log('All sections loaded, initializing slider...');
+            if (typeof initializeServicesSlider === 'function') {
+                initializeServicesSlider();
+            } else {
+                // Fallback if function not available
+                setTimeout(() => {
+                    console.log('Fallback slider initialization...');
+                    new ServicesSlider();
+                }, 500);
+            }
         })();
     </script>
 </body>

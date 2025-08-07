@@ -141,8 +141,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update opening status every minute
     setInterval(updateOpeningStatus, 60000);
     
-    // Initialize Services Slider
-    new ServicesSlider();
+    // Initialize Services Slider after sections are loaded
+    initializeServicesSlider();
 }); 
 
 // Services Slider
@@ -159,22 +159,19 @@ class ServicesSlider {
             return;
         }
         
-        console.log('Services slider initialized with', this.slides.length, 'slides');
-        
         this.currentSlide = 0;
         this.totalSlides = this.slides.length;
-        this.isAutoPlaying = true;
-        this.autoPlayInterval = null;
         this.touchStartX = 0;
         this.touchEndX = 0;
         
+        console.log('Services slider initialized with', this.totalSlides, 'slides');
         this.init();
     }
     
     init() {
         this.setupEventListeners();
-        this.startAutoPlay();
         this.updateSliderPosition();
+        this.updateNavigationButtons();
     }
     
     setupEventListeners() {
@@ -182,43 +179,56 @@ class ServicesSlider {
         if (this.prevBtn) {
             this.prevBtn.addEventListener('click', (e) => {
                 e.preventDefault();
+                e.stopPropagation();
+                console.log('Prev button clicked');
                 this.prevSlide();
             });
         }
         if (this.nextBtn) {
             this.nextBtn.addEventListener('click', (e) => {
                 e.preventDefault();
+                e.stopPropagation();
+                console.log('Next button clicked');
                 this.nextSlide();
             });
         }
         
-        // Touch events for pause on hold
-        if (this.container) {
-            this.container.addEventListener('touchstart', (e) => this.handleTouchStart(e));
-            this.container.addEventListener('touchend', (e) => this.handleTouchEnd(e));
-            this.container.addEventListener('touchmove', (e) => this.handleTouchMove(e));
-            
-            // Mouse events for pause on hold
-            this.container.addEventListener('mouseenter', () => this.pauseAutoPlay());
-            this.container.addEventListener('mouseleave', () => this.resumeAutoPlay());
-        }
+        // Touch events for swipe
+        this.container.addEventListener('touchstart', (e) => this.handleTouchStart(e));
+        this.container.addEventListener('touchend', (e) => this.handleTouchEnd(e));
+        this.container.addEventListener('touchmove', (e) => this.handleTouchMove(e));
+        
+        // Mouse events for hover
+        this.container.addEventListener('mouseenter', () => this.showNavigation());
+        this.container.addEventListener('mouseleave', () => this.hideNavigation());
+        
+        // Touch events for mobile navigation visibility
+        this.container.addEventListener('touchstart', () => this.showNavigation());
+        this.container.addEventListener('touchend', () => {
+            setTimeout(() => this.hideNavigation(), 3000);
+        });
     }
     
     handleTouchStart(e) {
-        this.pauseAutoPlay();
         this.touchStartX = e.changedTouches[0].screenX;
+        this.showNavigation();
     }
     
     handleTouchEnd(e) {
         this.touchEndX = e.changedTouches[0].screenX;
         this.handleSwipe();
-        // Resume auto play after a short delay
-        setTimeout(() => this.resumeAutoPlay(), 2000);
+        setTimeout(() => this.hideNavigation(), 3000);
     }
     
     handleTouchMove(e) {
-        // Prevent default to avoid scrolling while touching slider
-        e.preventDefault();
+        // Allow scrolling but prevent default only for horizontal swipes
+        const touch = e.changedTouches[0];
+        const diffX = Math.abs(touch.screenX - this.touchStartX);
+        const diffY = Math.abs(touch.screenY - (e.touches[0]?.screenY || 0));
+        
+        if (diffX > diffY && diffX > 10) {
+            e.preventDefault();
+        }
     }
     
     handleSwipe() {
@@ -236,47 +246,56 @@ class ServicesSlider {
         }
     }
     
-    startAutoPlay() {
-        if (this.autoPlayInterval) {
-            clearInterval(this.autoPlayInterval);
-        }
-        
-        this.autoPlayInterval = setInterval(() => {
-            if (this.isAutoPlaying) {
-                this.nextSlide();
-            }
-        }, 4000); // Change slide every 4 seconds
+    showNavigation() {
+        if (this.prevBtn) this.prevBtn.style.opacity = '1';
+        if (this.nextBtn) this.nextBtn.style.opacity = '1';
     }
     
-    pauseAutoPlay() {
-        this.isAutoPlaying = false;
-        if (this.autoPlayInterval) {
-            clearInterval(this.autoPlayInterval);
-        }
-    }
-    
-    resumeAutoPlay() {
-        this.isAutoPlaying = true;
-        this.startAutoPlay();
+    hideNavigation() {
+        if (this.prevBtn) this.prevBtn.style.opacity = '0';
+        if (this.nextBtn) this.nextBtn.style.opacity = '0';
     }
     
     nextSlide() {
         this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
+        console.log('Moving to slide', this.currentSlide);
         this.updateSliderPosition();
+        this.updateNavigationButtons();
     }
     
     prevSlide() {
         this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
+        console.log('Moving to slide', this.currentSlide);
         this.updateSliderPosition();
+        this.updateNavigationButtons();
     }
     
     updateSliderPosition() {
-        if (!this.slider) return;
-        
-        const slideWidth = 100 / this.totalSlides;
+        // Chaque slide fait 100% de la largeur du container
+        // Pour 3 slides, on a 300% de largeur totale
+        // Donc chaque slide = 100% de la largeur totale
+        const slideWidth = 100; // 100% par slide
         const translateX = -(this.currentSlide * slideWidth);
+        console.log('Updating slider position:', translateX + '%');
         this.slider.style.transform = `translateX(${translateX}%)`;
-        
-        console.log(`Slide ${this.currentSlide + 1}/${this.totalSlides}, translateX: ${translateX}%`);
     }
+    
+    updateNavigationButtons() {
+        // Update button states based on current slide
+        if (this.prevBtn) {
+            this.prevBtn.style.opacity = this.currentSlide === 0 ? '0.5' : '1';
+        }
+        if (this.nextBtn) {
+            this.nextBtn.style.opacity = this.currentSlide === this.totalSlides - 1 ? '0.5' : '1';
+        }
+    }
+}
+
+// Function to initialize slider after sections are loaded
+function initializeServicesSlider() {
+    // Wait a bit for sections to load, then initialize slider
+    setTimeout(() => {
+        console.log('Initializing Services Slider...');
+        new ServicesSlider();
+    }, 1000);
 } 

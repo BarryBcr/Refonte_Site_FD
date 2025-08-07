@@ -230,34 +230,35 @@
     position: relative;
     overflow: hidden;
     border-radius: 1rem;
-    width: 100%;
-    height: auto;
-    min-height: 400px;
+    min-height: 500px; /* Ensure consistent height */
+    padding: 0 60px; /* Espace pour les flèches */
 }
 
 .services-slider {
     display: flex;
     transition: transform 0.5s ease-out;
-    width: 300%; /* 3 slides * 100% each */
-    height: 100%;
+    width: 100%; /* Largeur corrigée pour un centrage optimal */
 }
 
 .service-slide {
-    flex-shrink: 0;
-    width: 33.333333%; /* 100% / 3 slides */
-    padding: 0 0.5rem;
+    flex: 0 0 100%; /* Chaque slide prend exactement 100% de la largeur visible */
+    min-width: 280px; /* Largeur minimale */
+    width: 100%; /* Chaque slide prend 100% de la largeur du container */
+    padding: 0 0.25rem; /* Réduit le padding */
+    height: 100%;
     display: flex;
     align-items: stretch;
+    justify-content: center; /* Centre le contenu horizontalement */
 }
 
-/* Navigation Arrows */
+/* Navigation Arrows - Improved visibility */
 .slider-nav-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    z-index: 10;
-    background: rgba(179, 136, 255, 0.1);
-    border: 2px solid rgba(179, 136, 255, 0.3);
+    z-index: 20;
+    background: rgba(179, 136, 255, 0.15);
+    border: 2px solid rgba(179, 136, 255, 0.4);
     border-radius: 50%;
     width: 48px;
     height: 48px;
@@ -266,15 +267,16 @@
     justify-content: center;
     backdrop-filter: blur(10px);
     transition: all 0.3s ease;
-    opacity: 0;
+    opacity: 0.8; /* More visible by default */
     cursor: pointer;
 }
 
 .slider-nav-btn:hover {
-    background: rgba(179, 136, 255, 0.2);
-    border-color: rgba(179, 136, 255, 0.6);
-    box-shadow: 0 0 20px rgba(179, 136, 255, 0.4);
+    background: rgba(179, 136, 255, 0.25);
+    border-color: rgba(179, 136, 255, 0.7);
+    box-shadow: 0 0 20px rgba(179, 136, 255, 0.5);
     transform: translateY(-50%) scale(1.1);
+    opacity: 1;
 }
 
 .slider-nav-btn:active {
@@ -283,62 +285,59 @@
 
 .slider-nav-btn svg {
     filter: drop-shadow(0 0 8px rgba(179, 136, 255, 0.6));
+    width: 20px;
+    height: 20px;
 }
 
 .slider-nav-prev {
-    left: 8px;
+    left: 6px; /* Ajusté pour être plus proche du bord */
 }
 
 .slider-nav-next {
-    right: 8px;
+    right: 6px; /* Ajusté pour être plus proche du bord */
 }
 
-/* Show arrows on hover/touch */
+/* Show arrows on hover/touch - More responsive */
 .services-slider-container:hover .slider-nav-btn,
 .services-slider-container:active .slider-nav-btn {
     opacity: 1;
 }
 
-/* Mobile touch feedback */
+/* Mobile touch feedback - Always visible on mobile */
 @media (max-width: 768px) {
+    .services-slider-container {
+        padding: 0 70px; /* Plus d'espace pour éviter le chevauchement avec les flèches */
+    }
+    
+    .service-slide {
+        flex: 0 1 auto; /* Flexibilité sur mobile */
+        min-width: 260px; /* Largeur minimale réduite sur mobile */
+        max-width: 90%; /* Limite à 90% pour éviter le débordement */
+        padding: 0 0.5rem; /* Plus d'espacement interne */
+    }
+    
+    /* Alignement à gauche des paragraphes de description sur mobile */
+    .service-card-mobile p.text-gray-300.mb-4.text-center.text-sm {
+        text-align: left;
+    }
+    
     .slider-nav-btn {
-        opacity: 0.7;
+        opacity: 0.9; /* More visible on mobile */
         width: 44px;
         height: 44px;
+        background: rgba(179, 136, 255, 0.2);
+        border-color: rgba(179, 136, 255, 0.5);
+    }
+    
+    .slider-nav-btn svg {
+        width: 18px;
+        height: 18px;
     }
     
     .services-slider-container:active .slider-nav-btn {
         opacity: 1;
+        background: rgba(179, 136, 255, 0.3);
     }
-    
-    .service-slide {
-        width: 66.666667%; /* Show 1.5 cards */
-    }
-    
-    .services-slider {
-        width: 450%; /* 3 slides * 150% each for 1.5 cards visible */
-    }
-    
-    .services-slider-container {
-        min-height: 320px;
-    }
-    
-    .service-card-mobile {
-        min-height: 280px;
-        padding: 1rem;
-    }
-}
-
-/* Slider card animations */
-.service-slide .service-card-mobile {
-    transform: scale(0.95);
-    opacity: 0.8;
-    transition: all 0.3s ease;
-}
-
-.service-slide.active .service-card-mobile {
-    transform: scale(1);
-    opacity: 1;
 }
 
 /* Fade animation for slides */
@@ -590,14 +589,324 @@
   }
 }
 
-/* Mobile Service Cards (without 3D effect) */
+/* Mobile Service Cards - Optimized content display */
 .service-card-mobile {
-  background-color: #2d2d2d;
-  border: 1px solid rgba(179, 136, 255, 0.2);
+    background-color: #2d2d2d;
+    border: 1px solid rgba(179, 136, 255, 0.2);
+    box-shadow: 0px 0px 20px 1px rgba(179, 136, 255, 0.3);
+    border-radius: 15px;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    transform: scale(0.98);
+    opacity: 0.9;
+    transition: all 0.3s ease;
+    /* Largeur optimisée pour s'adapter entre les flèches */
+    width: 85%; /* Réduit la largeur pour éviter le débordement */
+    max-width: 85%; /* Limite la largeur maximale */
+}
+
+.service-card-mobile:hover {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.service-card-mobile .service-icon {
+    margin-bottom: 1rem;
+}
+
+.service-card-mobile h3 {
+    font-size: 1.125rem;
+    line-height: 1.4;
+    margin-bottom: 0.75rem;
+    min-height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.service-card-mobile p {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    flex-grow: 1;
+    /* Removed text truncation for better readability */
+    overflow: visible;
+    text-overflow: unset;
+    display: block;
+}
+
+.service-card-mobile ul {
+    margin-bottom: 1rem;
+    flex-grow: 1;
+}
+
+.service-card-mobile li {
+    font-size: 0.75rem;
+    line-height: 1.4;
+    margin-bottom: 0.25rem;
+}
+
+.service-card-mobile .text-center {
+    margin-top: auto;
+}
+
+.service-card-mobile a {
+    font-size: 0.75rem;
+    padding: 0.5rem 1rem;
+}
+
+/* Fade animation for slides */
+@keyframes slideFadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.service-slide {
+    animation: slideFadeIn 0.5s ease-out;
+}
+
+/* Glow effect for navigation arrows */
+.slider-nav-btn::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #b388ff, #9b6dff, #7c4dff, #b388ff);
+    border-radius: 50%;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.slider-nav-btn:hover::before {
+    opacity: 0.3;
+    animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Touch indicator */
+.services-slider-container::after {
+    content: '';
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: rgba(179, 136, 255, 0.3);
+    border-radius: 2px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.services-slider-container:active::after {
+    opacity: 1;
+} 
+
+/* 3D Card Effect for Services */
+.service-card-3d {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+}
+
+.card {
+  overflow: visible;
+  width: 100%;
+  height: 100%;
+  max-width: 350px;
+}
+
+.content {
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 300ms;
   box-shadow: 0px 0px 20px 1px rgba(179, 136, 255, 0.3);
   border-radius: 15px;
-  overflow: hidden;
 }
+
+.front, .back {
+  background-color: #2d2d2d;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 15px;
+  overflow: hidden;
+  border: 1px solid rgba(179, 136, 255, 0.2);
+}
+
+.back {
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  transform: rotateY(180deg);
+}
+
+.back::before {
+  position: absolute;
+  content: ' ';
+  display: block;
+  width: 160px;
+  height: 160%;
+  background: linear-gradient(90deg, transparent, #b388ff, #b388ff, #b388ff, #b388ff, transparent);
+  animation: rotation_481 5000ms infinite linear;
+}
+
+.back-content {
+  position: absolute;
+  width: 99%;
+  height: 99%;
+  background-color: #2d2d2d;
+  border-radius: 15px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.card:hover .content {
+  transform: rotateY(180deg);
+}
+
+@keyframes rotation_481 {
+  0% {
+    transform: rotateZ(0deg);
+  }
+
+  100% {
+    transform: rotateZ(360deg);
+  }
+}
+
+.front {
+  transform: rotateY(0deg);
+  color: white;
+}
+
+.front .front-content {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.front-content .badge {
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 2px 10px;
+  border-radius: 10px;
+  backdrop-filter: blur(2px);
+  width: fit-content;
+}
+
+.description {
+  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+  border-radius: 5px;
+}
+
+.title {
+  font-size: 11px;
+  max-width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.title p {
+  width: 50%;
+}
+
+.card-footer {
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 5px;
+  font-size: 8px;
+}
+
+.front .img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.circle {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background-color: #b388ff;
+  position: relative;
+  filter: blur(15px);
+  animation: floating 2600ms infinite linear;
+}
+
+#bottom {
+  background-color: #9b6dff;
+  left: 50px;
+  top: 0px;
+  width: 150px;
+  height: 150px;
+  animation-delay: -800ms;
+}
+
+#right {
+  background-color: #7c4dff;
+  left: 160px;
+  top: -80px;
+  width: 30px;
+  height: 30px;
+  animation-delay: -1800ms;
+}
+
+@keyframes floating {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
