@@ -201,6 +201,20 @@
     background: #9b6dff;
 }
 
+/* Breakpoint spécifique pour iPhone et petits écrans */
+@media (max-width: 480px), (max-device-width: 480px) {
+    .services-slider-container {
+        padding: 0 60px; /* Moins de padding pour les petits écrans */
+        min-height: 450px; /* Hauteur réduite pour iPhone */
+    }
+    
+    .service-card-mobile {
+        width: 90%; /* Largeur réduite sur très petits écrans */
+        max-width: 90%;
+        padding: 1rem; /* Padding réduit */
+    }
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .service-card {
@@ -237,7 +251,7 @@
 .services-slider {
     display: flex;
     transition: transform 0.5s ease-out;
-    width: 100%; /* Largeur corrigée pour un centrage optimal */
+    width: 300%; /* 3 slides × 100% pour assurer la visibilité de toutes les cartes */
 }
 
 .service-slide {
@@ -304,15 +318,15 @@
 }
 
 /* Mobile touch feedback - Always visible on mobile */
-@media (max-width: 768px) {
+@media (max-width: 768px), (max-device-width: 768px) {
     .services-slider-container {
         padding: 0 70px; /* Plus d'espace pour éviter le chevauchement avec les flèches */
     }
     
     .service-slide {
-        flex: 0 1 auto; /* Flexibilité sur mobile */
-        min-width: 260px; /* Largeur minimale réduite sur mobile */
-        max-width: 90%; /* Limite à 90% pour éviter le débordement */
+        flex: 0 0 100%; /* Force chaque slide à prendre exactement 100% */
+        min-width: 100%; /* Force la largeur minimale */
+        max-width: 100%; /* Force la largeur maximale */
         padding: 0 0.5rem; /* Plus d'espacement interne */
     }
     
