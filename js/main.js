@@ -169,29 +169,27 @@ class ServicesSlider {
     }
     
     init() {
+        this.setupDimensions();
         this.setupEventListeners();
         this.updateSliderPosition();
         this.updateNavigationButtons();
     }
+
+    setupDimensions() {
+        // Ensure slider width matches number of slides and each slide occupies equal fraction
+        if (this.slider && this.totalSlides > 0) {
+            this.slider.style.width = `${this.totalSlides * 100}%`;
+            const basis = 100 / this.totalSlides;
+            this.slides.forEach(slide => {
+                slide.style.flex = `0 0 ${basis}%`;
+                slide.style.minWidth = `${basis}%`;
+                slide.style.maxWidth = `${basis}%`;
+            });
+        }
+    }
     
     setupEventListeners() {
-        // Navigation buttons
-        if (this.prevBtn) {
-            this.prevBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                console.log('Prev button clicked');
-                this.prevSlide();
-            });
-        }
-        if (this.nextBtn) {
-            this.nextBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                console.log('Next button clicked');
-                this.nextSlide();
-            });
-        }
+        // Navigation buttons (removed)
         
         // Touch events for swipe
         this.container.addEventListener('touchstart', (e) => this.handleTouchStart(e));
@@ -199,14 +197,10 @@ class ServicesSlider {
         this.container.addEventListener('touchmove', (e) => this.handleTouchMove(e));
         
         // Mouse events for hover
-        this.container.addEventListener('mouseenter', () => this.showNavigation());
-        this.container.addEventListener('mouseleave', () => this.hideNavigation());
+        // No hover navigation indicators
         
         // Touch events for mobile navigation visibility
-        this.container.addEventListener('touchstart', () => this.showNavigation());
-        this.container.addEventListener('touchend', () => {
-            setTimeout(() => this.hideNavigation(), 3000);
-        });
+        // No touch navigation indicators
     }
     
     handleTouchStart(e) {
@@ -271,11 +265,9 @@ class ServicesSlider {
     }
     
     updateSliderPosition() {
-        // Chaque slide fait 100% de la largeur du container
-        // Pour 3 slides, on a 300% de largeur totale
-        // Donc chaque slide = 100% de la largeur totale
-        const slideWidth = 100; // 100% par slide
-        const translateX = -(this.currentSlide * slideWidth);
+        // Translate by the fraction of the slider width that corresponds to one slide
+        const percentagePerSlide = 100 / this.totalSlides; // e.g., 33.333% for 3 slides
+        const translateX = -(this.currentSlide * percentagePerSlide);
         console.log('Updating slider position:', translateX + '%');
         this.slider.style.transform = `translateX(${translateX}%)`;
     }
