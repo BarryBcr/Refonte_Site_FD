@@ -109,16 +109,44 @@
     </div>
 </section>
 
-<!-- CTA Section -->
-<section class="py-16 md:py-24 brand-gradient">
-    <div class="container mx-auto px-4 text-center">
-        <h2 class="text-3xl md:text-4xl font-bold text-white mb-6 futuristic-font glow-text">Prêt à développer votre entreprise ?</h2>
-        <p class="text-xl text-white mb-8 max-w-3xl mx-auto">
-            Contactez-nous dès aujourd'hui pour discuter de vos besoins et découvrir comment nous pouvons vous aider à atteindre vos objectifs.
-        </p>
-        <a href="#contact" class="btn-primary glow">
-            Demander un devis gratuit
-        </a>
+<!-- Testimonials Section -->
+<section id="testimonials" class="py-16 md:py-24 bg-white">
+    <div class="container mx-auto px-4">
+        <!-- Section Header -->
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4 futuristic-font">
+                Ce que disent nos clients
+            </h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Découvrez les retours d'expérience de nos clients satisfaits
+            </p>
+        </div>
+
+        <!-- Testimonials Carousel -->
+        <div class="testimonials-carousel-container relative max-w-6xl mx-auto">
+            <!-- Carousel Track -->
+            <div class="testimonials-track flex transition-transform duration-500 ease-in-out">
+                <!-- Testimonials will be dynamically inserted here -->
+            </div>
+
+            <!-- Navigation Arrows -->
+            <button class="testimonial-nav prev absolute left-4 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-300 z-10 border border-gray-200">
+                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            
+            <button class="testimonial-nav next absolute right-4 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-300 z-10 border border-gray-200">
+                <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </button>
+
+            <!-- Dots Indicators -->
+            <div class="testimonial-dots flex justify-center mt-8 space-x-2">
+                <!-- Dots will be dynamically inserted here -->
+            </div>
+        </div>
     </div>
 </section>
 
