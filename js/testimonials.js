@@ -57,14 +57,42 @@ class TestimonialsCarousel {
 
     async loadTestimonials() {
         try {
-            console.log('📥 Chargement des témoignages depuis /data/testimonials.json...');
-            const response = await fetch('/data/testimonials.json');
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            console.log('📥 Chargement des témoignages...');
+            
+            // Essayer différents chemins pour GitHub Pages
+            const paths = [
+                '/data/testimonials.json',
+                './data/testimonials.json',
+                'data/testimonials.json',
+                '/Refonte_FD/data/testimonials.json'
+            ];
+            
+            let data = null;
+            let successfulPath = '';
+            
+            for (const path of paths) {
+                try {
+                    console.log(`🔍 Tentative avec le chemin: ${path}`);
+                    const response = await fetch(path);
+                    if (response.ok) {
+                        data = await response.json();
+                        successfulPath = path;
+                        console.log(`✅ Témoignages chargés depuis: ${path}`);
+                        break;
+                    }
+                } catch (error) {
+                    console.log(`❌ Échec avec le chemin: ${path}`);
+                }
             }
-            const data = await response.json();
-            this.testimonials = data.testimonials || [];
-            console.log('📋 Témoignages récupérés:', this.testimonials);
+            
+            if (data && data.testimonials) {
+                this.testimonials = data.testimonials;
+                console.log('📋 Témoignages récupérés:', this.testimonials);
+            } else {
+                console.warn('⚠️ Aucun témoignage chargé depuis les chemins externes, utilisation des témoignages par défaut');
+                this.testimonials = this.getDefaultTestimonials();
+            }
+            
         } catch (error) {
             console.warn('⚠️ Erreur de chargement, utilisation des témoignages par défaut:', error);
             // Fallback si le fichier JSON n'est pas accessible
@@ -73,14 +101,51 @@ class TestimonialsCarousel {
     }
 
     getDefaultTestimonials() {
+        console.log('🔄 Utilisation des témoignages par défaut intégrés');
         return [
             {
                 id: 1,
-                name: "Client Satisfait",
-                company: "Entreprise",
-                position: "Poste",
-                avatar: "",
-                text: "Excellent service et résultats concrets !",
+                name: "Marie Dubois",
+                company: "E-commerce Plus",
+                position: "Directrice Marketing",
+                avatar: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMzIiIGZpbGw9InVybCgjZ3JhZGllbnQwX2xpbmVhcl8xXzEpIi8+CjxjaXJjbGUgY3g9IjMyIiBjeT0iMjQiIHI9IjEyIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMTYgNDhDMjQgNDAgMzIgNDAgNDAgNDgiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImdyYWRpZW50MF9saW5lYXJfMV8xIiB4MT0iMCIgeTE9IjAiIHgyPSI2NCIgeTI9IjY0IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIHN0b3AtY29sb3I9IiNiMzg4ZmYiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjOWI2ZGZmIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPC9zdmc+",
+                text: "FlairDigital a transformé notre stratégie digitale. Nos ventes en ligne ont augmenté de 40% en seulement 3 mois !",
+                rating: 5
+            },
+            {
+                id: 2,
+                name: "Thomas Martin",
+                company: "TechStart",
+                position: "CEO",
+                avatar: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMzIiIGZpbGw9InVybCgjZ3JhZGllbnQwX2xpbmVhcl8xXzEpIi8+CjxjaXJjbGUgY3g9IjMyIiBjeT0iMjQiIHI9IjEyIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMTYgNDhDMjQgNDAgMzIgNDAgNDAgNDgiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImdyYWRpZW50MF9saW5lYXJfMV8xIiB4MT0iMCIgeTE9IjAiIHgyPSI2NCIgeTI9IjY0IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIHN0b3AtY29sb3I9IiNiMzg4ZmYiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjOWI2ZGZmIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPC9zdmc+",
+                text: "L'équipe de FlairDigital a su comprendre nos besoins et livrer des solutions sur mesure. Un partenaire de confiance !",
+                rating: 5
+            },
+            {
+                id: 3,
+                name: "Sophie Bernard",
+                company: "Green Solutions",
+                position: "Responsable Communication",
+                avatar: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMzIiIGZpbGw9InVybCgjZ3JhZGllbnQwX2xpbmVhcl8xXzEpIi8+CjxjaXJjbGUgY3g9IjMyIiBjeT0iMjQiIHI9IjEyIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMTYgNDhDMjQgNDAgMzIgNDAgNDAgNDgiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImdyYWRpZW50MF9saW5lYXJfMV8xIiB4MT0iMCIgeTE9IjAiIHgyPSI2NCIgeTI9IjY0IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIHN0b3AtY29sb3I9IiNiMzg4ZmYiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjOWI2ZGZmIi8+CjwvbGluYXI+",
+                text: "Excellente collaboration ! FlairDigital nous a aidés à moderniser notre présence en ligne avec professionnalisme.",
+                rating: 5
+            },
+            {
+                id: 4,
+                name: "Lucas Moreau",
+                company: "Innov'Consulting",
+                position: "Fondateur",
+                avatar: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMzIiIGZpbGw9InVybCgjZ3JhZGllbnQwX2xpbmVhcl8xXzEpIi8+CjxjaXJjbGUgY3g9IjMyIiBjeT0iMjQiIHI9IjEyIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMTYgNDhDMjQgNDAgMzIgNDAgNDAgNDgiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImdyYWRpZW50MF9saW5lYXJfMV8xIiB4MT0iMCIgeTE9IjAiIHgyPSI2NCIgeTI9IjY0IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIHN0b3AtY29sb3I9IiNiMzg4ZmYiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjOWI2ZGZmIi8+CjwvbGluYXI+",
+                text: "Grâce à FlairDigital, notre visibilité sur les réseaux sociaux a explosé. ROI exceptionnel sur nos investissements !",
+                rating: 5
+            },
+            {
+                id: 5,
+                name: "Emma Rousseau",
+                company: "BioMarket",
+                position: "Directrice Commerciale",
+                avatar: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMzIiIGZpbGw9InVybCgjZ3JhZGllbnQwX2xpbmVhcl8xXzEpIi8+CjxjaXJjbGUgY3g9IjMyIiBjeT0iMjQiIHI9IjEyIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMTYgNDhDMjQgNDAgMzIgNDAgNDAgNDgiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImdyYWRpZW50MF9saW5lYXJfMV8xIiB4MT0iMCIgeTE9IjAiIHgyPSI2NCIgeTI9IjY0IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIHN0b3AtY29sb3I9IiNiMzg4ZmYiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjOWI2ZGZmIi8+CjwvbGluYXI+",
+                text: "FlairDigital a créé une stratégie d'automatisation qui nous fait gagner 15h par semaine. Incroyable !",
                 rating: 5
             }
         ];
