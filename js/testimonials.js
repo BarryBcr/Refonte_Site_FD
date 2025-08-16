@@ -212,31 +212,60 @@ class TestimonialsCarousel {
     }
 
     setupEventListeners() {
+        console.log('🔧 Configuration des événements...');
+        
         // Navigation arrows
         const prevBtn = document.querySelector('.testimonial-nav.prev');
         const nextBtn = document.querySelector('.testimonial-nav.next');
 
+        console.log('🔍 Boutons trouvés:', { prev: !!prevBtn, next: !!nextBtn });
+
         if (prevBtn) {
-            prevBtn.addEventListener('click', () => this.previousSlide());
+            prevBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                console.log('⬅️ Bouton précédent cliqué');
+                this.previousSlide();
+            });
         }
         if (nextBtn) {
-            nextBtn.addEventListener('click', () => this.nextSlide());
+            nextBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                console.log('➡️ Bouton suivant cliqué');
+                this.nextSlide();
+            });
         }
 
-        // Pause auto-play on hover
+        // Pause auto-play on hover/touch
         const container = document.querySelector('.testimonials-carousel-container');
         if (container) {
             container.addEventListener('mouseenter', () => this.pauseAutoPlay());
             container.addEventListener('mouseleave', () => this.resumeAutoPlay());
+            
+            // Gestion mobile : pause au touch
+            container.addEventListener('touchstart', () => {
+                console.log('👆 Touch détecté - pause auto-play');
+                this.pauseAutoPlay();
+            });
+            
+            container.addEventListener('touchend', () => {
+                console.log('👆 Touch terminé - reprise auto-play');
+                setTimeout(() => this.resumeAutoPlay(), 1000); // Reprise après 1 seconde
+            });
         }
 
         // Touch events for mobile
         this.setupTouchEvents();
+        
+        console.log('✅ Événements configurés');
     }
 
     setupTouchEvents() {
+        console.log('📱 Configuration des événements tactiles...');
         const track = document.querySelector('.testimonials-track');
-        if (!track) return;
+        if (!track) {
+            console.error('❌ Track non trouvé pour les événements tactiles');
+            return;
+        }
 
         let startX = 0;
         let currentX = 0;
@@ -245,6 +274,7 @@ class TestimonialsCarousel {
         track.addEventListener('touchstart', (e) => {
             startX = e.touches[0].clientX;
             isDragging = true;
+            console.log('👆 Touch start:', startX);
             this.pauseAutoPlay();
         });
 
@@ -259,17 +289,23 @@ class TestimonialsCarousel {
             const diff = startX - currentX;
             const threshold = 50;
 
+            console.log('👆 Touch end - diff:', diff, 'threshold:', threshold);
+
             if (Math.abs(diff) > threshold) {
                 if (diff > 0) {
+                    console.log('👆 Swipe gauche - slide suivant');
                     this.nextSlide();
                 } else {
+                    console.log('👆 Swipe droite - slide précédent');
                     this.previousSlide();
                 }
             }
 
             isDragging = false;
-            this.resumeAutoPlay();
+            setTimeout(() => this.resumeAutoPlay(), 1000);
         });
+        
+        console.log('✅ Événements tactiles configurés');
     }
 
     nextSlide() {
@@ -323,14 +359,23 @@ class TestimonialsCarousel {
             clearInterval(this.autoPlayInterval);
         }
         
+        // Vérifier que nous avons des témoignages
+        if (this.testimonials.length <= 1) {
+            console.log('⚠️ Pas assez de témoignages pour l\'auto-play');
+            return;
+        }
+        
         this.autoPlayInterval = setInterval(() => {
             if (!this.isPaused) {
                 console.log('🔄 Rotation automatique - passage au slide suivant');
                 this.nextSlide();
+            } else {
+                console.log('⏸️ Auto-play en pause');
             }
         }, this.autoPlayDelay);
         
         console.log('✅ Rotation automatique démarrée avec un délai de', this.autoPlayDelay, 'ms');
+        console.log('📱 Compatible mobile:', 'ontouchstart' in window);
     }
 
     pauseAutoPlay() {
