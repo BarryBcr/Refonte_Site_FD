@@ -218,14 +218,50 @@ class ContactForm {
     async submitForm(data) {
         console.log('📤 ContactForm: submitForm appelé avec:', data);
         
-        // Simulation d'envoi - remplacer par votre logique d'envoi réelle
-        console.log('⏳ ContactForm: Simulation d\'envoi en cours...');
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        try {
+            // Envoi réel vers le webhook n8n
+            console.log('🌐 ContactForm: Envoi vers le webhook n8n...');
+            
+            const response = await fetch('https://n8n.boubacarbarry.fr/webhook/formulaire-FD', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: data.name,
+                    email: data.email,
+                    service: data.service,
+                    message: data.message,
+                    timestamp: new Date().toISOString(),
+                    source: 'FlairDigital Website'
+                })
+            });
 
-        // Afficher la popup de confirmation
-        console.log('✅ ContactForm: Envoi simulé réussi, affichage de la popup');
-        this.showSuccessPopup(data);
-        this.resetForm();
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log('✅ ContactForm: Réponse du webhook:', result);
+            
+            // Afficher la popup de confirmation
+            this.showSuccessPopup(data);
+            this.resetForm();
+            
+        } catch (error) {
+            console.error('❌ ContactForm: Erreur lors de l\'envoi:', error);
+            
+            // Afficher un message d'erreur approprié
+            let errorMessage = 'Une erreur est survenue lors de l\'envoi';
+            
+            if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                errorMessage = 'Erreur de connexion. Vérifiez votre connexion internet.';
+            } else if (error.message.includes('HTTP')) {
+                errorMessage = 'Erreur serveur. Veuillez réessayer plus tard.';
+            }
+            
+            this.showNotification(errorMessage, 'error');
+        }
     }
 
     setSubmitting(submitting) {
