@@ -208,12 +208,22 @@
         min-height: 450px;
     }
     
-    /* Carte légèrement réduite et centrée */
+    /* Carte légèrement réduite et centrée avec bordures stylisées */
     .service-card-mobile {
         width: 92%;
         max-width: 340px;
         margin: 0 auto;
         padding: 0.9rem;
+        /* Ajout des mêmes bordures que la version desktop */
+        border: 1px solid rgba(179, 136, 255, 0.2);
+        border-radius: 15px;
+        transition: all 0.3s ease;
+    }
+    
+    /* Hover effect pour les cartes mobile */
+    .service-card-mobile:hover {
+        border-color: rgba(179, 136, 255, 0.5);
+        box-shadow: 0 0 15px rgba(179, 136, 255, 0.3);
     }
 }
 
@@ -286,6 +296,18 @@
     /* Alignement à gauche des paragraphes de description sur mobile */
     .service-card-mobile p.text-gray-300.mb-4.text-center.text-sm {
         text-align: left;
+    }
+    
+    /* Bordures stylisées pour tablettes et mobile */
+    .service-card-mobile {
+        border: 1px solid rgba(179, 136, 255, 0.2);
+        border-radius: 15px;
+        transition: all 0.3s ease;
+    }
+    
+    .service-card-mobile:hover {
+        border-color: rgba(179, 136, 255, 0.5);
+        box-shadow: 0 0 15px rgba(179, 136, 255, 0.3);
     }
     
     .slider-nav-btn, .services-slider-container:active .slider-nav-btn { display: none !important; }
