@@ -211,7 +211,7 @@
     /* Carte légèrement réduite et centrée avec bordures stylisées */
     .service-card-mobile {
         width: 92%;
-        max-width: 340px;
+        max-width: 340px; 
         margin: 0 auto;
         padding: 0.9rem;
         /* Ajout des mêmes bordures que la version desktop */
@@ -249,6 +249,12 @@
     .newsletter-button {
         border-radius: 0.5rem;
     }
+    
+    /* Réduction de l'espacement vertical de la section services sur mobile */
+    #services {
+        padding-top: 2rem !important;    /* 32px au lieu de 64px */
+        padding-bottom: 2rem !important; /* 32px au lieu de 64px */
+    }
 } 
 
 /* Services Slider Styles */
@@ -256,7 +262,7 @@
     position: relative;
     overflow: hidden;
     border-radius: 1rem;
-    min-height: 500px; /* Ensure consistent height */
+    min-height: 350px; /* Ensure consistent height */
     padding: 0 16px; /* plus de flèches, padding réduit */
 }
 
