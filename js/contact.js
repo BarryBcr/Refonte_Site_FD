@@ -1,6 +1,7 @@
 // Gestion du formulaire de contact
 class ContactForm {
     constructor() {
+        console.log('🔧 ContactForm: Constructeur appelé');
         this.form = document.getElementById('contact-form');
         this.submitButton = null;
         this.isSubmitting = false;
@@ -8,16 +9,37 @@ class ContactForm {
     }
 
     init() {
+        console.log('🔧 ContactForm: Init appelé');
         if (this.form) {
+            console.log('✅ ContactForm: Formulaire trouvé:', this.form);
             this.submitButton = this.form.querySelector('button[type="submit"]');
+            console.log('✅ ContactForm: Bouton trouvé:', this.submitButton);
             this.setupEventListeners();
             this.setupValidation();
+            this.createNotificationContainer();
+        } else {
+            console.error('❌ ContactForm: Formulaire NON trouvé!');
+        }
+    }
+
+    createNotificationContainer() {
+        // Créer le conteneur de notifications s'il n'existe pas
+        if (!document.getElementById('notification-container')) {
+            const container = document.createElement('div');
+            container.id = 'notification-container';
+            container.className = 'fixed top-4 right-4 z-50 space-y-2';
+            document.body.appendChild(container);
         }
     }
 
     setupEventListeners() {
+        console.log('🔧 ContactForm: Configuration des event listeners');
+        
+        // Intercepter la soumission du formulaire
         this.form.addEventListener('submit', (e) => {
-            e.preventDefault();
+            console.log('🚨 ContactForm: Submit intercepté!');
+            e.preventDefault(); // Empêcher la soumission normale
+            console.log('✅ ContactForm: Submit empêché, appel de handleSubmit');
             this.handleSubmit();
         });
 
@@ -32,6 +54,8 @@ class ContactForm {
                 this.clearFieldError(input);
             });
         });
+        
+        console.log('✅ ContactForm: Event listeners configurés');
     }
 
     setupValidation() {
@@ -115,11 +139,12 @@ class ContactForm {
     showFieldError(field, message) {
         this.clearFieldError(field);
         
-        field.classList.add('border-red-500');
-        field.classList.remove('border-brand/30');
+        // Ajouter les classes d'erreur
+        field.style.borderColor = '#ef4444'; // Rouge
+        field.style.borderWidth = '2px';
         
         const errorDiv = document.createElement('div');
-        errorDiv.className = 'text-red-500 text-sm mt-1';
+        errorDiv.className = 'text-red-500 text-sm mt-1 font-medium';
         errorDiv.textContent = message;
         errorDiv.id = `error-${field.name}`;
         
@@ -127,8 +152,9 @@ class ContactForm {
     }
 
     clearFieldError(field) {
-        field.classList.remove('border-red-500');
-        field.classList.add('border-brand/30');
+        // Restaurer les styles par défaut
+        field.style.borderColor = '';
+        field.style.borderWidth = '';
         
         const errorDiv = field.parentNode.querySelector(`#error-${field.name}`);
         if (errorDiv) {
@@ -150,20 +176,28 @@ class ContactForm {
     }
 
     async handleSubmit() {
-        if (this.isSubmitting) return;
+        console.log('🚀 ContactForm: handleSubmit appelé');
+        
+        if (this.isSubmitting) {
+            console.log('⚠️ ContactForm: Déjà en cours d\'envoi');
+            return;
+        }
 
         if (!this.validateForm()) {
+            console.log('❌ ContactForm: Validation échouée');
             this.showNotification('Veuillez corriger les erreurs dans le formulaire', 'error');
             return;
         }
 
+        console.log('✅ ContactForm: Validation réussie, début de l\'envoi');
         this.setSubmitting(true);
 
         try {
             const formData = this.getFormData();
+            console.log('📤 ContactForm: Données du formulaire:', formData);
             await this.submitForm(formData);
         } catch (error) {
-            console.error('Erreur lors de l\'envoi:', error);
+            console.error('❌ ContactForm: Erreur lors de l\'envoi:', error);
             this.showNotification('Une erreur est survenue lors de l\'envoi', 'error');
         } finally {
             this.setSubmitting(false);
@@ -182,29 +216,20 @@ class ContactForm {
     }
 
     async submitForm(data) {
+        console.log('📤 ContactForm: submitForm appelé avec:', data);
+        
         // Simulation d'envoi - remplacer par votre logique d'envoi réelle
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        console.log('⏳ ContactForm: Simulation d\'envoi en cours...');
+        await new Promise(resolve => setTimeout(resolve, 1500));
 
-        // Exemple d'envoi avec fetch (à adapter selon votre backend)
-        /*
-        const response = await fetch('/api/contact', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
-        });
-
-        if (!response.ok) {
-            throw new Error('Erreur réseau');
-        }
-        */
-
-        this.showSuccessMessage(data);
+        // Afficher la popup de confirmation
+        console.log('✅ ContactForm: Envoi simulé réussi, affichage de la popup');
+        this.showSuccessPopup(data);
         this.resetForm();
     }
 
     setSubmitting(submitting) {
+        console.log('🔄 ContactForm: setSubmitting:', submitting);
         this.isSubmitting = submitting;
         
         if (this.submitButton) {
@@ -224,18 +249,106 @@ class ContactForm {
         }
     }
 
-    showSuccessMessage(data) {
-        const message = `Merci ${data.name} ! Votre message a bien été envoyé. Nous vous contacterons rapidement à l'adresse ${data.email}.`;
-        this.showNotification(message, 'success');
+    showSuccessPopup(data) {
+        console.log('🎉 ContactForm: Affichage de la popup de succès');
+        
+        // Créer la popup de succès
+        const popup = document.createElement('div');
+        popup.id = 'success-popup';
+        popup.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+        
+        popup.innerHTML = `
+            <div class="bg-white border border-gray-200 rounded-xl p-8 max-w-md mx-4 transform transition-all duration-300 scale-95 opacity-0 shadow-2xl">
+                <div class="text-center">
+                    <!-- Icône de succès -->
+                    <div class="mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-6" style="border: 3px solid #b388ff; background-color: transparent;">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="stroke: #b388ff;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    
+                    <!-- Message de succès -->
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Message envoyé !</h3>
+                    <p class="text-gray-600 mb-8 leading-relaxed">
+                        Votre message a été envoyé ! Nous vous recontactons au plus vite.
+                    </p>
+                    
+                    <!-- Bouton de fermeture avec bordures violettes (non rempli) et check -->
+                    <button onclick="this.closest('#success-popup').remove()" class="success-popup-button px-8 py-3 bg-transparent border-2 font-medium rounded-lg transition-all duration-300 flex items-center justify-center mx-auto group" style="border-color: #b388ff; color: #b388ff;">
+                        <svg class="w-5 h-5 mr-2 transition-transform duration-200 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="stroke: #b388ff;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Parfait !
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(popup);
+        
+        // Animation d'entrée
+        setTimeout(() => {
+            const content = popup.querySelector('div');
+            content.classList.remove('scale-95', 'opacity-0');
+            content.classList.add('scale-100', 'opacity-100');
+        }, 100);
+        
+        // Fermeture au clic sur l'arrière-plan
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup) {
+                popup.remove();
+            }
+        });
     }
 
     showNotification(message, type) {
-        if (window.app && window.app.showNotification) {
-            window.app.showNotification(message, type);
-        } else {
-            // Fallback si le système de notification n'est pas disponible
-            alert(message);
-        }
+        const container = document.getElementById('notification-container');
+        if (!container) return;
+
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type} transform transition-all duration-300 ease-in-out translate-x-full`;
+        
+        // Styles selon le type
+        const styles = {
+            success: 'bg-green-500 text-white border-l-4 border-green-600',
+            error: 'bg-red-500 text-white border-l-4 border-red-600',
+            warning: 'bg-yellow-500 text-white border-l-4 border-yellow-600',
+            info: 'bg-blue-500 text-white border-l-4 border-blue-600'
+        };
+
+        notification.className = `notification p-4 rounded-lg shadow-lg max-w-sm ${styles[type] || styles.info}`;
+        
+        notification.innerHTML = `
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <span class="font-medium">${message}</span>
+                </div>
+                <button class="ml-4 text-white hover:text-gray-200" onclick="this.parentElement.parentElement.remove()">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+        `;
+
+        container.appendChild(notification);
+
+        // Animation d'entrée
+        setTimeout(() => {
+            notification.classList.remove('translate-x-full');
+        }, 100);
+
+        // Auto-suppression après 5 secondes
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 300);
+            }
+        }, 5000);
     }
 
     resetForm() {
@@ -244,8 +357,7 @@ class ContactForm {
         // Réinitialiser les styles
         const inputs = this.form.querySelectorAll('input, textarea, select');
         inputs.forEach(input => {
-            input.classList.remove('border-red-500');
-            input.classList.add('border-brand/30');
+            this.clearFieldError(input);
         });
     }
 }
@@ -292,14 +404,15 @@ class NewsletterForm {
     }
 
     showError(message) {
-        if (window.app && window.app.showNotification) {
-            window.app.showNotification(message, 'error');
+        // Utiliser le système de notification du formulaire de contact
+        if (window.contactForm) {
+            window.contactForm.showNotification(message, 'error');
         }
     }
 
     showSuccess(message) {
-        if (window.app && window.app.showNotification) {
-            window.app.showNotification(message, 'success');
+        if (window.contactForm) {
+            window.contactForm.showNotification(message, 'success');
         }
     }
 }
@@ -402,9 +515,13 @@ class OpeningHours {
 }
 
 // Initialisation
-document.addEventListener('DOMContentLoaded', () => {
-    new ContactForm();
+// Note: L'initialisation se fait maintenant dans index.html après le chargement des sections
+// pour éviter le problème de timing où le formulaire n'existe pas encore dans le DOM
+
+// Fonction d'initialisation manuelle (appelée depuis index.html)
+function initializeContactForm() {
+    console.log('🚀 Initialisation manuelle du formulaire de contact...');
+    window.contactForm = new ContactForm();
     new NewsletterForm();
-    new ContactInfo();
-    new OpeningHours();
-}); 
+    console.log('✅ Initialisation manuelle terminée');
+} 

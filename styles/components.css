@@ -553,350 +553,93 @@
   }
 }
 
-/* Mobile Service Cards - Optimized content display */
-.service-card-mobile {
-    background-color: #2d2d2d;
-    border: 1px solid rgba(179, 136, 255, 0.2);
-    box-shadow: 0px 0px 20px 1px rgba(179, 136, 255, 0.3);
-    border-radius: 15px;
-    overflow: hidden;
-    height: auto; /* laisse la carte définir sa hauteur réelle */
-    display: flex;
-    flex-direction: column;
-    padding: 1.5rem;
-    margin: 0; /* Évite les marges horizontales qui créent un vide */
-    box-sizing: border-box; /* Le padding est inclus dans la largeur */
-    transform: scale(0.98);
-    opacity: 0.9;
-    transition: all 0.3s ease;
-    /* Largeur optimisée pour s'adapter entre les flèches */
-    width: 75%;
-    max-width: min(75%, 360px);
-}
-
-/* Forcer la bonne cassure des textes pour éviter l'overflow sur petits écrans */
-.service-card-mobile h3,
-.service-card-mobile p,
-.service-card-mobile li,
-.service-card-mobile span {
-    overflow-wrap: anywhere;
-    word-break: break-word;
-}
-
-.service-card-mobile:hover {
-    transform: scale(1);
-    opacity: 1;
-}
-
-.service-card-mobile .service-icon {
-    margin-bottom: 1rem;
-}
-
-.service-card-mobile h3 {
-    font-size: 1.125rem;
-    line-height: 1.4;
-    margin-bottom: 0.75rem;
-    min-height: 2.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.service-card-mobile p {
-    font-size: 0.875rem;
-    line-height: 1.5;
-    margin-bottom: 1rem;
-    flex-grow: 1;
-    /* Removed text truncation for better readability */
-    overflow: visible;
-    text-overflow: unset;
-    display: block;
-}
-
-.service-card-mobile ul {
-    margin-bottom: 1rem;
-    flex-grow: 1;
-}
-
-.service-card-mobile li {
-    font-size: 0.75rem;
-    line-height: 1.4;
-    margin-bottom: 0.25rem;
-}
-
-.service-card-mobile .text-center {
-    margin-top: auto;
-}
-
-.service-card-mobile a {
-    font-size: 0.75rem;
-    padding: 0.5rem 1rem;
-}
-
-/* Overrides mobiles positionnés APRÈS les styles de base pour prendre le dessus */
-@media (max-width: 480px), (max-device-width: 480px) {
-  .service-slide { padding: 0; }
-  .service-card-mobile {
-    width: 90% !important;
-    max-width: 320px !important;
-    margin: 0 auto !important;
-    padding: 0.9rem;
-  }
-}
-
-/* Fade animation for slides */
-@keyframes slideFadeIn {
-    from {
-        opacity: 0;
-        transform: translateX(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-.service-slide {
-    animation: slideFadeIn 0.5s ease-out;
-}
-
-/* Glow effect for navigation arrows */
-.slider-nav-btn::before {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: linear-gradient(45deg, #b388ff, #9b6dff, #7c4dff, #b388ff);
-    border-radius: 50%;
-    z-index: -1;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.slider-nav-btn:hover::before {
-    opacity: 0.3;
-    animation: rotate 2s linear infinite;
-}
-
-@keyframes rotate {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-/* Touch indicator */
-.services-slider-container::after {
-    content: '';
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 4px;
-    background: rgba(179, 136, 255, 0.3);
-    border-radius: 2px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.services-slider-container:active::after {
-    opacity: 1;
-} 
-
-/* 3D Card Effect for Services */
-.service-card-3d {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 400px;
-}
-
-.card {
-  overflow: visible;
-  width: 100%;
-  height: 100%;
-  max-width: 350px;
-}
-
-.content {
-  width: 100%;
-  height: 100%;
-  transform-style: preserve-3d;
-  transition: transform 300ms;
-  box-shadow: 0px 0px 20px 1px rgba(179, 136, 255, 0.3);
-  border-radius: 15px;
-}
-
-.front, .back {
-  background-color: #2d2d2d;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  border-radius: 15px;
-  overflow: hidden;
-  border: 1px solid rgba(179, 136, 255, 0.2);
-}
-
-.back {
-  width: 100%;
-  height: 100%;
-  justify-content: center;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  transform: rotateY(180deg);
-}
-
-.back::before {
-  position: absolute;
-  content: ' ';
-  display: block;
-  width: 160px;
-  height: 160%;
-  background: linear-gradient(90deg, transparent, #b388ff, #b388ff, #b388ff, #b388ff, transparent);
-  animation: rotation_481 5000ms infinite linear;
-}
-
-.back-content {
-  position: absolute;
-  width: 99%;
-  height: 99%;
-  background-color: #2d2d2d;
-  border-radius: 15px;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  padding: 20px;
-}
-
-.card:hover .content {
-  transform: rotateY(180deg);
-}
-
-@keyframes rotation_481 {
-  0% {
-    transform: rotateZ(0deg);
-  }
-
-  100% {
-    transform: rotateZ(360deg);
-  }
-}
-
-.front {
-  transform: rotateY(0deg);
-  color: white;
-}
-
-.front .front-content {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  padding: 30px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.front-content .badge {
-  background-color: rgba(0, 0, 0, 0.3);
-  padding: 2px 10px;
-  border-radius: 10px;
-  backdrop-filter: blur(2px);
-  width: fit-content;
-}
-
-.description {
-  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.5);
-  width: 100%;
-  padding: 10px;
-  background-color: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(5px);
-  border-radius: 5px;
-}
-
-.title {
-  font-size: 11px;
-  max-width: 100%;
-  display: flex;
-  justify-content: space-between;
-}
-
-.title p {
-  width: 50%;
-}
-
-.card-footer {
-  color: rgba(255, 255, 255, 0.5);
-  margin-top: 5px;
-  font-size: 8px;
-}
-
-.front .img {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-
-.circle {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  background-color: #b388ff;
-  position: relative;
-  filter: blur(15px);
-  animation: floating 2600ms infinite linear;
-}
-
-#bottom {
-  background-color: #9b6dff;
-  left: 50px;
-  top: 0px;
-  width: 150px;
-  height: 150px;
-  animation-delay: -800ms;
-}
-
-#right {
-  background-color: #7c4dff;
-  left: 160px;
-  top: -80px;
-  width: 30px;
-  height: 30px;
-  animation-delay: -1800ms;
-}
-
-@keyframes floating {
-  0% {
-    transform: translateY(0px);
-  }
-
-  50% {
-    transform: translateY(10px);
-  }
-
-  100% {
-    transform: translateY(0px);
-  }
-}
-
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .service-card-3d {
     display: none;
   }
+} 
+
+/* Styles du formulaire de contact */
+.form-input {
+    @apply w-full px-4 py-3 bg-dark-light border border-brand/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand transition-all duration-300;
+}
+
+.form-input:focus {
+    @apply border-brand shadow-lg shadow-brand/20;
+}
+
+.form-input.error {
+    @apply border-red-500 border-2;
+}
+
+.form-input.error:focus {
+    @apply ring-red-500/50 border-red-500;
+}
+
+/* Bouton du formulaire */
+.btn-primary {
+    @apply px-8 py-3 bg-gradient-to-r from-brand to-brand-dark text-white font-medium rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-brand/20 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-brand/50;
+}
+
+.btn-primary:disabled {
+    @apply opacity-70 cursor-not-allowed hover:scale-100 hover:shadow-none;
+}
+
+/* Bouton de la popup de succès */
+.success-popup-button {
+    transition: all 0.3s ease;
+}
+
+.success-popup-button:hover {
+    background-color: #b388ff !important;
+    border-color: #b388ff !important;
+    color: white !important;
+}
+
+.success-popup-button:hover svg {
+    stroke: white !important;
+}
+
+/* Animations pour les notifications */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.notification {
+    animation: slideInRight 0.3s ease-out;
+}
+
+.notification.removing {
+    animation: slideOutRight 0.3s ease-in;
+}
+
+/* Responsive pour le formulaire */
+@media (max-width: 768px) {
+    .form-input {
+        @apply px-3 py-2 text-sm;
+    }
+    
+    .btn-primary {
+        @apply px-6 py-2 text-sm;
+    }
 } 
