@@ -111,6 +111,7 @@
     <script src="js/particles.js"></script>
     <script src="js/contact.js"></script>
     <script src="js/testimonials.js"></script>
+    <script src="js/chatbot.js"></script>
     <script>
         // Chargement dynamique des sections
         const sections = [
@@ -134,6 +135,7 @@
                     }
                 }
             }
+            
             // Initialize slider after all sections are loaded
             console.log('All sections loaded, initializing slider...');
             if (typeof initializeServicesSlider === 'function') {
@@ -144,6 +146,15 @@
                     console.log('Fallback slider initialization...');
                     new ServicesSlider();
                 }, 500);
+            }
+            
+            // Initialize contact form AFTER sections are loaded
+            console.log('All sections loaded, initializing contact form...');
+            if (typeof initializeContactForm === 'function') {
+                initializeContactForm();
+                console.log('✅ Contact form initialized successfully');
+            } else {
+                console.error('❌ initializeContactForm function not found');
             }
         })();
     </script>

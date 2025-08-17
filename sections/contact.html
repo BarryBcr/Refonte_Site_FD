@@ -55,5 +55,79 @@
                 </form>
             </div>
         </div>
+        
+        <!-- Section Chatbot -->
+        <div class="mt-20">
+            <div class="text-center mb-12">
+                <h3 class="text-2xl md:text-3xl font-bold text-white mb-4 futuristic-font glow-text">Parlez à notre <span class="text-brand">IA</span></h3>
+                <p class="text-lg text-gray-300 max-w-2xl mx-auto">
+                    Découvrez comment automatiser votre croissance en échangeant avec notre intelligence artificielle
+                </p>
+            </div>
+            
+            <!-- Interface de collecte pour le chatbot -->
+            <div id="chatbot-collect" class="max-w-md mx-auto">
+                <div class="info-card animated-border">
+                    <form id="chatbot-form" class="space-y-6">
+                        <div>
+                            <label for="chatbot-name" class="block text-gray-300 font-medium mb-2">Prénom</label>
+                            <input type="text" id="chatbot-name" name="chatbot-name" class="form-input w-full" placeholder="Votre prénom" required>
+                        </div>
+                        
+                        <div>
+                            <label for="chatbot-email" class="block text-gray-300 font-medium mb-2">Email</label>
+                            <input type="email" id="chatbot-email" name="chatbot-email" class="form-input w-full" placeholder="Votre email" required>
+                        </div>
+                        
+                        <div>
+                            <button type="submit" class="btn-primary w-full glow">
+                                Commencer à parler à l'IA
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Interface de chat (cachée par défaut) -->
+            <div id="chatbot-interface" class="max-w-4xl mx-auto hidden">
+                <div class="info-card animated-border">
+                    <div class="chat-header bg-brand/10 p-4 rounded-t-lg border-b border-brand/20">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-brand rounded-full flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-white font-medium">Assistant IA FlairDigital</h4>
+                                    <p class="text-gray-400 text-sm">En ligne</p>
+                                </div>
+                            </div>
+                            <button id="close-chat" class="text-gray-400 hover:text-white transition-colors">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-messages p-4 space-y-4 max-h-96 overflow-y-auto">
+                        <!-- Les messages s'afficheront ici -->
+                    </div>
+                    
+                    <div class="chat-input p-4 border-t border-brand/20">
+                        <div class="flex space-x-3">
+                            <input type="text" id="chat-input" class="form-input flex-1" placeholder="Tapez votre message..." disabled>
+                            <button id="send-message" class="px-6 py-3 bg-brand text-white rounded-lg hover:bg-brand-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
