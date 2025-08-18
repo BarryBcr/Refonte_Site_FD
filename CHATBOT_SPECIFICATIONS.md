@@ -18,52 +18,53 @@ Le chatbot FlairDigital est un agent conversationnel intelligent conçu pour :
 
 ## 🏗️ **Architecture Technique**
 
-### **1. Webhooks séparés**
+### **1. Webhook unique et fonctionnel**
 ```
-Webhook A : Initialisation (collecte prénom/email)
-Webhook B : Conversation (échange avec l'IA)
+Webhook public : https://n8n.boubacarbarry.fr/webhook/483bf213-3064-4dd9-8006-4d7bf9fe4cc9/chat
+- Réception des messages utilisateur
+- Traitement par l'agent IA
+- Retour des réponses via "Respond to Webhook"
 ```
 
 ### **2. Gestion des sessions**
-- **Session ID** : UUID généré côté frontend (plus robuste que n8n pour la génération)
-- **Stockage** : Base de données avec timestamp de création et dernière activité
+- **Session ID** : UUID généré côté frontend (plus robuste que n8n pour la génération) ✅
+- **Stockage** : Base de données Supabase avec timestamp de création et dernière activité ✅
 - **Durée** : Pas de limite de temps fixe
-- **Identification** : Session ID + Email utilisateur
-- **Système de nettoyage** : Nettoyage automatique des sessions inactives (après X jours d'inactivité)
+- **Identification** : Session ID + Email utilisateur ✅
+- **Système de nettoyage** : À implémenter (nettoyage automatique des sessions inactives)
 
-### **3. Base de données recommandée**
-**Supabase** est parfait pour ce cas d'usage :
-- **Tables** : sessions, conversations, objections, utilisateurs
-- **Realtime** : Possibilité de chat en temps réel
-- **Auth** : Gestion des utilisateurs si nécessaire
-- **API REST** : Intégration facile avec n8n
+### **3. Base de données implémentée**
+**Supabase** est parfait pour ce cas d'usage et est maintenant configuré :
+- **Table principale** : `fd_chat_memory` ✅
+- **Structure** : session_id, user_name, user_email, conversation (JSONB), metadata, status ✅
+- **API REST** : Intégration facile avec n8n ✅
 
 ---
 
 ## 🔄 **Flux de conversation**
 
-### **Phase 1 : Initialisation**
-1. Utilisateur saisit prénom + email
-2. Génération d'un Session ID unique
-3. Stockage en base (session + utilisateur)
-4. Affichage de l'interface de chat
-5. Message de bienvenue personnalisé
+### **Phase 1 : Initialisation** ✅ IMPLÉMENTÉE
+1. Utilisateur saisit prénom + email ✅
+2. Génération d'un Session ID unique ✅
+3. Stockage en base (session + utilisateur) ✅
+4. Affichage de l'interface de chat ✅
+5. Message de bienvenue personnalisé ✅
 
-### **Phase 2 : Conversation**
-1. Utilisateur envoie un message
-2. Envoi vers webhook B avec Session ID
-3. Traitement IA (GPT/Claude)
-4. Réponse personnalisée
-5. Stockage de l'échange en base
+### **Phase 2 : Conversation** ✅ IMPLÉMENTÉE
+1. Utilisateur envoie un message ✅
+2. Envoi vers webhook n8n avec Session ID ✅
+3. Traitement IA (GPT/Claude) ✅
+4. Réponse personnalisée ✅
+5. Stockage de l'échange en base ✅
 
-### **Phase 3 : Qualification et conclusion**
+### **Phase 3 : Qualification et conclusion** 🔄 À IMPLÉMENTER
 1. **Qualification automatique** du besoin
 2. **Détection d'objections** et stockage
 3. **Proposition de solutions** FlairDigital
 4. **Demande de confirmation** email
 5. **Proposition de rendez-vous**
 
-### **Phase 4 : Gestion de l'inactivité**
+### **Phase 4 : Gestion de l'inactivité** 🔄 À IMPLÉMENTER
 1. **Détection automatique** de fin de conversation
 2. **Relance automatique** par l'IA en cas d'inactivité prolongée
 3. **Gestion des sessions** abandonnées
@@ -99,50 +100,37 @@ Ton objectif : Qualifier le prospect et le diriger vers une prise de rendez-vous
 
 ## 💾 **Structure de la base de données**
 
-### **Table : sessions**
+### **Table : fd_chat_memory** ✅ IMPLÉMENTÉE
 ```sql
-CREATE TABLE sessions (
+CREATE TABLE fd_chat_memory (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   session_id VARCHAR(255) UNIQUE NOT NULL,
-  user_name VARCHAR(100) NOT NULL,
-  user_email VARCHAR(255) NOT NULL,
-  created_at TIMESTAMP DEFAULT NOW(),
+  user_name VARCHAR(100),
+  user_email VARCHAR(255),
+  conversation JSONB NOT NULL DEFAULT '[]'::jsonb,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  last_activity TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   status VARCHAR(50) DEFAULT 'active',
-  last_activity TIMESTAMP DEFAULT NOW(),
-  is_active BOOLEAN DEFAULT TRUE,
-  inactivity_count INTEGER DEFAULT 0
+  metadata JSONB DEFAULT '{}'::jsonb
 );
 ```
 
-### **Table : conversations**
+### **Tables futures à implémenter** 🔄
 ```sql
-CREATE TABLE conversations (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  session_id VARCHAR(255) REFERENCES sessions(session_id),
-  message_type VARCHAR(20) NOT NULL, -- 'user' ou 'bot'
-  content TEXT NOT NULL,
-  timestamp TIMESTAMP DEFAULT NOW(),
-  metadata JSONB -- Pour stocker des infos supplémentaires
-);
-```
-
-### **Table : objections**
-```sql
+-- Table : objections
 CREATE TABLE objections (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  session_id VARCHAR(255) REFERENCES sessions(session_id),
+  session_id VARCHAR(255) REFERENCES fd_chat_memory(session_id),
   objection_text TEXT NOT NULL,
   category VARCHAR(100), -- 'prix', 'temps', 'confiance', etc.
   detected_at TIMESTAMP DEFAULT NOW(),
   resolved BOOLEAN DEFAULT FALSE
 );
-```
 
-### **Table : qualifications**
-```sql
+-- Table : qualifications
 CREATE TABLE qualifications (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  session_id VARCHAR(255) REFERENCES sessions(session_id),
+  session_id VARCHAR(255) REFERENCES fd_chat_memory(session_id),
   business_size VARCHAR(50), -- 'startup', 'pme', 'grande_entreprise'
   industry VARCHAR(100),
   budget_range VARCHAR(50),
@@ -156,25 +144,23 @@ CREATE TABLE qualifications (
 
 ## 🔌 **Intégration n8n**
 
-### **Workflow A : Initialisation**
+### **Workflow "Chatbot FD"** ✅ IMPLÉMENTÉ
 ```
-Webhook → Validation → Création Session → Stockage Supabase → Réponse OK
-```
-
-### **Workflow B : Conversation**
-```
-Webhook → Récupération Session → Appel IA → Stockage → Réponse IA
+Webhook public → AI Agent → Outils Postgres → Respond to Webhook
 ```
 
-### **Workflow C : Qualification finale**
-```
-Détection fin conversation → Analyse objections → Génération résumé → Email → Proposition RDV
-```
+**Nœuds implémentés :**
+- **"When chat message received"** : Webhook public sans authentification ✅
+- **"AI Agent"** : Agent IA avec prompt FlairDigital configuré ✅
+- **"GPT 4.1 Mini"** : Modèle de langage principal ✅
+- **"Claude 3.7 Sonnet"** : Modèle de langage secondaire ✅
+- **"Select rows from a table in Postgres"** : Lecture des sessions ✅
+- **"Insert or update rows in a table in Postgres"** : Sauvegarde des conversations ✅
+- **"Respond to Webhook"** : Retour des réponses IA ✅
 
-### **Workflow D : Gestion de l'inactivité**
-```
-Détection inactivité → Relance IA → Mise à jour session → Nettoyage si nécessaire
-```
+### **Workflows futurs à implémenter** 🔄
+- **Workflow de qualification finale** : Détection fin conversation + analyse
+- **Workflow de gestion inactivité** : Relance automatique + nettoyage sessions
 
 ---
 
@@ -231,26 +217,58 @@ L'équipe FlairDigital
 
 ## 🚀 **Plan d'implémentation**
 
-### **Phase 1 : Infrastructure**
-1. Configuration du projet Supabase (tables, API keys)
-2. Création des tables de base (sessions, conversations, objections, qualifications)
-3. Configuration des webhooks n8n
-4. Tests d'intégration de base
+### **Phase 1 : Infrastructure** ✅ TERMINÉE
+1. Configuration du projet Supabase (tables, API keys) ✅
+2. Création des tables de base (fd_chat_memory) ✅
+3. Configuration des webhooks n8n ✅
+4. Tests d'intégration de base ✅
 
-### **Phase 2 : IA de base**
-1. Intégration GPT-4
-2. Contexte FlairDigital
-3. Tests de conversation
+### **Phase 2 : IA de base** ✅ TERMINÉE
+1. Intégration GPT-4 ✅
+2. Contexte FlairDigital ✅
+3. Tests de conversation ✅
 
-### **Phase 3 : Fonctionnalités avancées**
+### **Phase 3 : Fonctionnalités avancées** 🔄 EN COURS
 1. Détection d'objections
 2. Qualification automatique
 3. Email de conclusion
 
-### **Phase 4 : Optimisation**
+### **Phase 4 : Optimisation** 🔄 À VENIR
 1. Analyse des métriques
 2. Amélioration des réponses
 3. A/B testing des approches
+
+---
+
+## 🎯 **État actuel et prochaines étapes**
+
+### **✅ Ce qui fonctionne actuellement**
+- **Interface utilisateur** : Formulaire de collecte + interface de chat complète
+- **Gestion des sessions** : UUID unique + stockage en base Supabase
+- **Communication n8n** : Webhook public + agent IA fonctionnel
+- **Stockage des conversations** : Table `fd_chat_memory` avec structure JSONB
+- **Agent IA** : Réponses contextuelles avec prompt FlairDigital configuré
+- **Workflow n8n** : Pipeline complet de réception → traitement → réponse
+
+### **🔄 Prochaines étapes prioritaires**
+1. **Détection automatique de fin de conversation**
+   - Implémenter la logique de détection d'inactivité
+   - Ajouter des triggers de relance automatique
+2. **Qualification automatique des prospects**
+   - Analyser les conversations pour extraire les besoins
+   - Catégoriser automatiquement les prospects
+3. **Email de conclusion automatique**
+   - Générer des résumés de conversation
+   - Proposer des prises de rendez-vous
+4. **Analytics et métriques**
+   - Suivre les performances du chatbot
+   - Analyser les patterns de conversation
+
+### **🔧 Améliorations techniques possibles**
+- **Gestion des erreurs** : Retry automatique en cas d'échec
+- **Cache des réponses** : Optimisation des performances
+- **Multi-langues** : Support d'autres langues que le français
+- **Intégrations avancées** : CRM, calendrier, analytics
 
 ---
 
@@ -264,22 +282,26 @@ L'équipe FlairDigital
 
 ## 🔧 **Décisions prises**
 
-### **Gestion des sessions**
-- **Session ID** : UUID côté frontend (plus robuste que n8n)
-- **Système de nettoyage** : Nettoyage automatique des sessions inactives
+### **Gestion des sessions** ✅ IMPLÉMENTÉ
+- **Session ID** : UUID côté frontend (plus robuste que n8n) ✅
+- **Système de nettoyage** : À implémenter (nettoyage automatique des sessions inactives)
 
-### **Détection de fin de conversation**
+### **Détection de fin de conversation** 🔄 À IMPLÉMENTER
 - **Automatique** : Détection par temps d'inactivité
 - **Relance IA** : L'IA peut relancer l'utilisateur en cas d'inactivité prolongée
 
-### **Intégration Supabase**
-- **Projet à configurer** : Pas encore configuré, sera fait en Phase 1
-- **Tables à créer** : sessions, conversations, objections, qualifications
+### **Intégration Supabase** ✅ IMPLÉMENTÉ
+- **Projet configuré** : Projet Supabase opérationnel ✅
+- **Table créée** : `fd_chat_memory` avec structure optimisée ✅
 
-### **Workflows n8n**
-- **Guidage nécessaire** : Assistance pour la création des workflows
-- **Webhooks séparés** : Initialisation, Conversation, Qualification, Gestion inactivité
+### **Workflows n8n** ✅ IMPLÉMENTÉ
+- **Workflow principal** : "Chatbot FD" avec agent IA fonctionnel ✅
+- **Webhook unique** : Point d'entrée public pour toutes les conversations ✅
+- **Architecture simplifiée** : Un seul workflow au lieu de 4 séparés ✅
 
 ---
 
-*Document créé le 17/08/2025 - Version 1.0*
+*Document créé le 17/08/2025 - Version 1.0*  
+*Dernière mise à jour : 18/08/2025 - Version 2.0 (Implémentation fonctionnelle)*
+
+**Note importante :** Ce document a été mis à jour pour refléter l'implémentation actuelle et fonctionnelle du chatbot. Les phases 1 et 2 sont terminées, le chatbot est opérationnel avec n8n et Supabase. Les phases 3 et 4 sont en cours de planification.

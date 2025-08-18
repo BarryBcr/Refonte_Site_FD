@@ -11,7 +11,25 @@ class ChatbotManager {
         
         this.userName = '';
         this.userEmail = '';
+        this.sessionId = '';
         this.isChatActive = false;
+        this.conversation = [];
+        this.isProcessing = false;
+        
+        // URL du webhook n8n
+        this.webhookUrl = 'https://n8n.boubacarbarry.fr/webhook/483bf213-3064-4dd9-8006-4d7bf9fe4cc9/chat';
+        
+        console.log('🔧 [DEBUG] ChatbotManager initialisé');
+        console.log('🌐 [DEBUG] URL webhook configurée:', this.webhookUrl);
+        console.log('🔍 [DEBUG] Éléments trouvés:', {
+            form: !!this.chatbotForm,
+            collect: !!this.chatbotCollect,
+            interface: !!this.chatbotInterface,
+            messages: !!this.chatMessages,
+            input: !!this.chatInput,
+            sendButton: !!this.sendButton,
+            closeButton: !!this.closeButton
+        });
         
         this.init();
     }
@@ -167,6 +185,15 @@ class ChatbotManager {
         return isValid;
     }
 
+    // Générer un UUID unique pour la session
+    generateSessionId() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            const r = Math.random() * 16 | 0;
+            const v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+
     handleFormSubmit() {
         if (!this.validateForm()) {
             return;
@@ -175,6 +202,12 @@ class ChatbotManager {
         // Récupérer les données
         this.userName = this.chatbotForm.querySelector('#chatbot-name').value.trim();
         this.userEmail = this.chatbotForm.querySelector('#chatbot-email').value.trim();
+        
+        // Générer un ID de session unique
+        this.sessionId = this.generateSessionId();
+        
+        // Initialiser la conversation
+        this.conversation = [];
 
         // Masquer le formulaire de collecte
         this.chatbotCollect.classList.add('hidden');
@@ -200,42 +233,208 @@ class ChatbotManager {
         this.chatInput.focus();
     }
 
-    sendMessage() {
+    async sendMessage() {
+        console.log('📝 [DEBUG] Début sendMessage');
         const message = this.chatInput.value.trim();
-        if (!message || !this.isChatActive) return;
+        console.log('📝 [DEBUG] Message saisi:', message);
+        console.log('📝 [DEBUG] État du chat:', {
+            isChatActive: this.isChatActive,
+            isProcessing: this.isProcessing
+        });
+        
+        if (!message || !this.isChatActive || this.isProcessing) {
+            console.log('❌ [DEBUG] Message non envoyé - conditions non remplies');
+            return;
+        }
 
+        console.log('✅ [DEBUG] Conditions OK, ajout du message utilisateur');
         // Ajouter le message de l'utilisateur
         this.addMessage('user', message);
+        
+        // Ajouter à l'historique
+        this.conversation.push({
+            type: 'user',
+            content: message,
+            timestamp: new Date().toISOString()
+        });
+        
+        console.log('📚 [DEBUG] Historique mis à jour, longueur:', this.conversation.length);
 
         // Vider l'input
         this.chatInput.value = '';
 
-        // Simuler une réponse de l'IA (mockup)
-        this.simulateAIResponse(message);
+        // Désactiver l'input pendant le traitement
+        console.log('⏳ [DEBUG] Activation de l\'état de traitement');
+        this.setProcessingState(true);
+
+        try {
+            console.log('🤖 [DEBUG] Appel du webhook n8n...');
+            // Appeler le webhook n8n
+            const aiResponse = await this.callN8nWebhook(message);
+            console.log('✅ [DEBUG] Réponse IA reçue:', aiResponse);
+            
+            // Ajouter la réponse de l'IA
+            this.addMessage('bot', aiResponse);
+            
+            // Ajouter à l'historique
+            this.conversation.push({
+                type: 'bot',
+                content: aiResponse,
+                timestamp: new Date().toISOString()
+            });
+            
+            console.log('📚 [DEBUG] Historique final mis à jour, longueur:', this.conversation.length);
+            
+        } catch (error) {
+            console.error('💥 [DEBUG] Erreur dans sendMessage:', error);
+            console.error('💥 [DEBUG] Stack trace:', error.stack);
+            
+            // Message d'erreur pour l'utilisateur
+            const errorMessage = 'Désolé, je rencontre des difficultés techniques. Veuillez réessayer dans quelques instants.';
+            console.log('⚠️ [DEBUG] Affichage message d\'erreur utilisateur');
+            this.addMessage('bot', errorMessage);
+            
+            // Ajouter à l'historique
+            this.conversation.push({
+                type: 'bot',
+                content: errorMessage,
+                timestamp: new Date().toISOString()
+            });
+        } finally {
+            // Réactiver l'input
+            console.log('🔄 [DEBUG] Désactivation de l\'état de traitement');
+            this.setProcessingState(false);
+        }
     }
 
-    simulateAIResponse(userMessage) {
-        // Simuler un délai de réponse
-        setTimeout(() => {
-            let response = '';
+    async callN8nWebhook(userMessage) {
+        console.log('🚀 [DEBUG] Début appel webhook n8n');
+        console.log('📤 [DEBUG] Payload envoyé:', {
+            session_id: this.sessionId,
+            user_name: this.userName,
+            user_email: this.userEmail,
+            conversation_length: this.conversation.length,
+            current_message: userMessage
+        });
 
-            // Réponses mockup basées sur le contenu du message
-            if (userMessage.toLowerCase().includes('bonjour') || userMessage.toLowerCase().includes('salut')) {
-                response = `Bonjour ${this.userName} ! Ravi de vous revoir. Comment puis-je vous aider aujourd'hui ?`;
-            } else if (userMessage.toLowerCase().includes('automatisation') || userMessage.toLowerCase().includes('automatiser')) {
-                response = 'L\'automatisation est un excellent moyen d\'optimiser vos processus ! Pouvez-vous me dire quels aspects de votre entreprise vous souhaitez automatiser ?';
-            } else if (userMessage.toLowerCase().includes('croissance') || userMessage.toLowerCase().includes('développer')) {
-                response = 'La croissance de votre entreprise est notre spécialité ! Nous utilisons des stratégies d\'acquisition client et d\'automatisation. Que souhaitez-vous améliorer en priorité ?';
-            } else if (userMessage.toLowerCase().includes('meta ads') || userMessage.toLowerCase().includes('facebook') || userMessage.toLowerCase().includes('instagram')) {
-                response = 'Les Meta Ads sont très efficaces pour l\'acquisition client ! Nous créons des campagnes ciblées qui convertissent. Avez-vous déjà testé la publicité sur les réseaux sociaux ?';
-            } else if (userMessage.toLowerCase().includes('email marketing')) {
-                response = 'L\'email marketing reste un canal très performant ! Nous automatisons vos séquences d\'emails pour maximiser l\'engagement. Quel est votre objectif principal ?';
-            } else {
-                response = 'Merci pour votre message ! Je comprends que vous souhaitez en savoir plus. Pouvez-vous me donner plus de détails sur vos besoins ?';
+        const payload = {
+            session_id: this.sessionId,
+            user_name: this.userName,
+            user_email: this.userEmail,
+            conversation: this.conversation,
+            current_message: userMessage
+        };
+
+        try {
+            console.log('🌐 [DEBUG] Envoi requête à:', this.webhookUrl);
+            console.log('📋 [DEBUG] Headers:', {
+                'Content-Type': 'application/json'
+            });
+            
+            const response = await fetch(this.webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
+
+            console.log('📥 [DEBUG] Réponse reçue:', {
+                status: response.status,
+                statusText: response.statusText,
+                ok: response.ok,
+                headers: Object.fromEntries(response.headers.entries())
+            });
+
+            if (!response.ok) {
+                console.error('❌ [DEBUG] Erreur HTTP:', response.status, response.statusText);
+                throw new Error(`Erreur HTTP: ${response.status} - ${response.statusText}`);
             }
 
-            this.addMessage('bot', response);
-        }, 1000 + Math.random() * 1000); // Délai aléatoire entre 1-2 secondes
+            console.log('✅ [DEBUG] Réponse HTTP OK, lecture du body...');
+            
+            // Essayer de lire le body de la réponse
+            let responseText;
+            try {
+                responseText = await response.text();
+                console.log('📄 [DEBUG] Body brut reçu:', responseText);
+            } catch (textError) {
+                console.error('❌ [DEBUG] Erreur lecture body:', textError);
+                throw new Error('Impossible de lire la réponse du serveur');
+            }
+
+            // Essayer de parser le JSON
+            let data;
+            try {
+                data = JSON.parse(responseText);
+                console.log('🔍 [DEBUG] JSON parsé:', data);
+            } catch (parseError) {
+                console.error('❌ [DEBUG] Erreur parsing JSON:', parseError);
+                console.log('📄 [DEBUG] Contenu brut qui n\'est pas du JSON:', responseText);
+                // Si ce n'est pas du JSON, retourner le texte brut
+                return responseText || 'Réponse reçue du serveur';
+            }
+            
+            // Vérifier la structure de la réponse
+            console.log('🔍 [DEBUG] Structure de la réponse:', {
+                hasResponse: !!data.response,
+                hasMessage: !!data.message,
+                hasContent: !!data.content,
+                hasOutput: !!data.output,
+                isString: typeof data === 'string',
+                dataType: typeof data,
+                keys: Object.keys(data)
+            });
+
+            if (data.response || data.message || data.content || data.output) {
+                const finalResponse = data.response || data.message || data.content || data.output;
+                console.log('✅ [DEBUG] Réponse extraite:', finalResponse);
+                return finalResponse;
+            } else if (typeof data === 'string') {
+                console.log('✅ [DEBUG] Réponse string directe:', data);
+                return data;
+            } else {
+                console.warn('⚠️ [DEBUG] Format de réponse inattendu, utilisation du message par défaut');
+                return 'Merci pour votre message ! Comment puis-je vous aider davantage ?';
+            }
+            
+        } catch (error) {
+            console.error('💥 [DEBUG] Erreur complète lors de l\'appel webhook:', error);
+            console.error('💥 [DEBUG] Stack trace:', error.stack);
+            console.error('💥 [DEBUG] Type d\'erreur:', error.constructor.name);
+            
+            // Log des détails de l'erreur
+            if (error.name === 'TypeError') {
+                console.error('💥 [DEBUG] Erreur de type - probablement un problème réseau');
+            } else if (error.name === 'SyntaxError') {
+                console.error('💥 [DEBUG] Erreur de syntaxe - problème de parsing');
+            } else if (error.name === 'ReferenceError') {
+                console.error('💥 [DEBUG] Erreur de référence - variable non définie');
+            }
+            
+            throw error;
+        }
+    }
+
+    setProcessingState(processing) {
+        this.isProcessing = processing;
+        this.chatInput.disabled = processing;
+        this.sendButton.disabled = processing;
+        
+        if (processing) {
+            this.sendButton.innerHTML = `
+                <svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+            `;
+        } else {
+            this.sendButton.innerHTML = `
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                </svg>
+            `;
+        }
     }
 
     addMessage(sender, content) {
@@ -279,6 +478,9 @@ class ChatbotManager {
         // Réinitialiser les variables
         this.userName = '';
         this.userEmail = '';
+        this.sessionId = '';
+        this.conversation = [];
+        this.isProcessing = false;
 
         // Nettoyer les erreurs
         const inputs = this.chatbotForm.querySelectorAll('input');
