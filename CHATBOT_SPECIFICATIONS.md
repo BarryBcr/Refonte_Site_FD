@@ -144,9 +144,9 @@ CREATE TABLE qualifications (
 
 ## 🔌 **Intégration n8n**
 
-### **Workflow "Chatbot FD"** ✅ IMPLÉMENTÉ
+### **Workflow "Chatbot FD"** ✅ IMPLÉMENTÉ ET FONCTIONNEL
 ```
-Webhook public → AI Agent → Outils Postgres → Respond to Webhook
+Webhook public → AI Agent → Outils Postgres (Execute Query) → Respond to Webhook
 ```
 
 **Nœuds implémentés :**
@@ -155,8 +155,13 @@ Webhook public → AI Agent → Outils Postgres → Respond to Webhook
 - **"GPT 4.1 Mini"** : Modèle de langage principal ✅
 - **"Claude 3.7 Sonnet"** : Modèle de langage secondaire ✅
 - **"Select rows from a table in Postgres"** : Lecture des sessions ✅
-- **"Insert or update rows in a table in Postgres"** : Sauvegarde des conversations ✅
+- **"Execute Query"** : Sauvegarde des conversations via SQL natif ✅ **SOLUTION FINALE**
 - **"Respond to Webhook"** : Retour des réponses IA ✅
+
+**💡 Solution technique :**
+- Remplacement du nœud "Insert or update" par "Execute Query" (19/08/2025)
+- Requêtes SQL natives pour éviter les conflits de types JSON
+- Gestion directe des upserts PostgreSQL
 
 ### **Workflows futurs à implémenter** 🔄
 - **Workflow de qualification finale** : Détection fin conversation + analyse
@@ -242,13 +247,14 @@ L'équipe FlairDigital
 
 ## 🎯 **État actuel et prochaines étapes**
 
-### **✅ Ce qui fonctionne actuellement**
-- **Interface utilisateur** : Formulaire de collecte + interface de chat complète
-- **Gestion des sessions** : UUID unique + stockage en base Supabase
-- **Communication n8n** : Webhook public + agent IA fonctionnel
-- **Stockage des conversations** : Table `fd_chat_memory` avec structure JSONB
-- **Agent IA** : Réponses contextuelles avec prompt FlairDigital configuré
-- **Workflow n8n** : Pipeline complet de réception → traitement → réponse
+### **✅ Ce qui fonctionne actuellement (100% OPÉRATIONNEL)**
+- **Interface utilisateur** : Formulaire de collecte + interface de chat complète ✅
+- **Gestion des sessions** : UUID unique + stockage en base Supabase ✅
+- **Communication n8n** : Webhook public + agent IA fonctionnel ✅
+- **Stockage des conversations** : Table `fd_chat_memory` avec Execute Query SQL ✅
+- **Agent IA** : Réponses contextuelles avec prompt FlairDigital configuré ✅
+- **Workflow n8n** : Pipeline complet de réception → traitement → réponse ✅
+- **Mémoire persistante** : Conversations sauvegardées et récupérées correctement ✅
 
 ### **🔄 Prochaines étapes prioritaires**
 1. **Détection automatique de fin de conversation**
@@ -302,6 +308,6 @@ L'équipe FlairDigital
 ---
 
 *Document créé le 17/08/2025 - Version 1.0*  
-*Dernière mise à jour : 18/08/2025 - Version 2.0 (Implémentation fonctionnelle)*
+*Dernière mise à jour : 19/08/2025 - Version 3.0 (Chatbot 100% fonctionnel)*
 
-**Note importante :** Ce document a été mis à jour pour refléter l'implémentation actuelle et fonctionnelle du chatbot. Les phases 1 et 2 sont terminées, le chatbot est opérationnel avec n8n et Supabase. Les phases 3 et 4 sont en cours de planification.
+**Note importante :** Ce document reflète l'état actuel du chatbot qui est maintenant 100% fonctionnel. Les phases 1 et 2 sont terminées et opérationnelles. Le problème de stockage base de données a été résolu le 19/08/2025 avec l'implémentation du nœud "Execute Query". Les phases 3 et 4 (fonctionnalités avancées) sont en cours de planification.
