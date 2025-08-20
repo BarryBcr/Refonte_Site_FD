@@ -62,13 +62,18 @@ class ChatbotManager {
             });
         }
 
-        // Gestion de la touche Entrée dans l'input
+        // Gestion de la touche Entrée dans le textarea
         if (this.chatInput) {
             this.chatInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
                     this.sendMessage();
                 }
+            });
+
+            // Auto-resize du textarea
+            this.chatInput.addEventListener('input', () => {
+                this.autoResizeTextarea();
             });
         }
 
@@ -260,8 +265,9 @@ class ChatbotManager {
         
         console.log('📚 [DEBUG] Historique mis à jour, longueur:', this.conversation.length);
 
-        // Vider l'input
+        // Vider l'input et réinitialiser sa taille
         this.chatInput.value = '';
+        this.resetTextareaSize();
 
         // Désactiver l'input pendant le traitement
         console.log('⏳ [DEBUG] Activation de l\'état de traitement');
@@ -487,6 +493,39 @@ class ChatbotManager {
         inputs.forEach(input => {
             this.clearFieldError(input);
         });
+    }
+
+    // Auto-resize du textarea
+    autoResizeTextarea() {
+        if (!this.chatInput) return;
+
+        // Réinitialiser la hauteur pour calculer la nouvelle taille
+        this.chatInput.style.height = 'auto';
+        
+        // Calculer la nouvelle hauteur basée sur le contenu
+        const scrollHeight = this.chatInput.scrollHeight;
+        const minHeight = 48; // 1 ligne
+        const maxHeight = 120; // 4 lignes
+        
+        // Appliquer la nouvelle hauteur avec les limites
+        if (scrollHeight <= maxHeight) {
+            this.chatInput.style.height = Math.max(scrollHeight, minHeight) + 'px';
+            this.chatInput.style.overflowY = 'hidden';
+        } else {
+            this.chatInput.style.height = maxHeight + 'px';
+            this.chatInput.style.overflowY = 'auto';
+            // Scroll automatique vers le bas pour voir la dernière ligne
+            this.chatInput.scrollTop = this.chatInput.scrollHeight;
+        }
+    }
+
+    // Réinitialiser la taille du textarea à 1 ligne
+    resetTextareaSize() {
+        if (!this.chatInput) return;
+        
+        this.chatInput.style.height = '48px'; // Hauteur d'une ligne
+        this.chatInput.style.overflowY = 'hidden';
+        this.chatInput.scrollTop = 0;
     }
 }
 

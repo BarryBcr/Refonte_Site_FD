@@ -594,6 +594,36 @@
     @apply w-full px-4 py-3 bg-dark-light border border-brand/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand transition-all duration-300;
 }
 
+/* Styles spécifiques pour le textarea du chat */
+.chat-textarea {
+    min-height: 48px; /* Hauteur d'une ligne */
+    max-height: 120px; /* Hauteur de 4 lignes environ */
+    resize: none;
+    overflow-y: auto;
+    line-height: 1.5;
+    transition: height 0.2s ease;
+    font-family: inherit;
+    font-size: inherit;
+}
+
+.chat-textarea::-webkit-scrollbar {
+    width: 4px;
+}
+
+.chat-textarea::-webkit-scrollbar-track {
+    background: rgba(179, 136, 255, 0.1);
+    border-radius: 2px;
+}
+
+.chat-textarea::-webkit-scrollbar-thumb {
+    background: rgba(179, 136, 255, 0.4);
+    border-radius: 2px;
+}
+
+.chat-textarea::-webkit-scrollbar-thumb:hover {
+    background: rgba(179, 136, 255, 0.6);
+}
+
 .form-input:focus {
     @apply border-brand shadow-lg shadow-brand/20;
 }

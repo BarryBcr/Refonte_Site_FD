@@ -2,29 +2,28 @@
   "testimonials": [
     {
       "id": 1,
-      "name": "Marie Dubois",
-      "company": "E-commerce Plus",
-      "position": "Directrice Marketing",
+      "name": "Stephanie Rameau",
+      "company": "Café de la place Saint Mars La brière",
+      "position": "Gerante",
       "avatar": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMzIiIGZpbGw9InVybCgjZ3JhZGllbnQwX2xpbmVhcl8xXzEpIi8+CjxjaXJjbGUgY3g9IjMyIiBjeT0iMjQiIHI9IjEyIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMTYgNDhDMjQgNDAgMzIgNDAgNDAgNDgiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImdyYWRpZW50MF9saW5lYXJfMV8xIiB4MT0iMCIgeTE9IjAiIHgyPSI2NCIgeTI9IjY0IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIHN0b3AtY29sb3I9IiNiMzg4ZmYiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjOWI2ZGZmIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPC9zdmc+",
-      "text": "FlairDigital a transformé notre stratégie digitale. Nos ventes en ligne ont augmenté de 40% en seulement 3 mois !",
+      "text": "FlairDigital nous a aidés à automatiser l'animation commerciale du Café de la place. Résultat : plus de temps pour nos clients et une ambiance toujours dynamique !",
       "rating": 5
     },
     {
       "id": 2,
-      "name": "Thomas Martin",
-      "company": "TechStart",
-      "position": "CEO",
-      "avatar": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMzIiIGZpbGw9InVybCgjZ3JhZGllbnQwX2xpbmVhcl8xXzEpIi8+CjxjaXJjbGUgY3g9IjMyIiBjeT0iMjQiIHI9IjEyIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMTYgNDhDMjQgNDAgMzIgNDAgNDAgNDgiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImdyYWRpZW50MF9saW5lYXJfMV8xIiB4MT0iMCIgeTE9IjAiIHgyPSI2NCIgeTI9IjY0IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIHN0b3AtY29sb3I9IiNiMzg4ZmYiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjOWI2ZGZmIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPC9zdmc+",
-      "text": "L'équipe de FlairDigital a su comprendre nos besoins et livrer des solutions sur mesure. Un partenaire de confiance !",
+      "name": "Thony Meunier",
+      "company": "Commercial independant",
+      "position": "Commercial",
+      "text": "Grâce à FlairDigital, j'ai pu trouver plus de clients grâce à la génération de prospects industriels et à la mise en place d'automatisations efficaces.",
       "rating": 5
     },
     {
       "id": 3,
-      "name": "Sophie Bernard",
-      "company": "Green Solutions",
-      "position": "Responsable Communication",
+      "name": "Jerome Cosset",
+      "company": "Bien être by Jerôme",
+      "position": "Magnétiseur",
       "avatar": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMzIiIGZpbGw9InVybCgjZ3JhZGllbnQwX2xpbmVhcl8xXzEpIi8+CjxjaXJjbGUgY3g9IjMyIiBjeT0iMjQiIHI9IjEyIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMTYgNDhDMjQgNDAgMzIgNDAgNDAgNDgiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImdyYWRpZW50MF9saW5lYXJfMV8xIiB4MT0iMCIgeTE9IjAiIHgyPSI2NCIgeTI9IjY0IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIHN0b3AtY29sb3I9IiNiMzg4ZmYiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjOWI2ZGZmIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPC9zdmc+",
-      "text": "Excellente collaboration ! FlairDigital nous a aidés à moderniser notre présence en ligne avec professionnalisme.",
+      "text": "FlairDigital m'a aidé à développer mon activité sur la région en me générant des rendez-vous qualifiés avec des personnes en recherche de thérapeutes. Nous avons utilisé de la publicité Meta pour cibler efficacement ces prospects.",
       "rating": 5
     },
     {
