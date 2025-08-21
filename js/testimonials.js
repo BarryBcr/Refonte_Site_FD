@@ -232,14 +232,14 @@ class TestimonialsCarousel {
                     <div class="stars mb-4">
                         ${this.generateStars(testimonial.rating)}
                     </div>
-                    <blockquote class="text-gray-700 text-lg mb-6 italic">
+                    <blockquote class="text-black text-lg mb-6 italic">
                         "${testimonial.text}"
                     </blockquote>
                 </div>
                 <div class="text-center">
-                    <h4 class="font-semibold text-gray-800 text-lg">${testimonial.name}</h4>
-                    <p class="text-gray-600 text-sm">${testimonial.position}</p>
-                    <p class="text-blue-600 font-medium text-sm">${testimonial.company}</p>
+                    <h4 class="font-semibold text-black text-lg">${testimonial.name}</h4>
+                    <p class="text-black text-sm">${testimonial.position}</p>
+                    <p class="company text-[#b388ff] font-medium text-sm">${testimonial.company}</p>
                 </div>
             </div>
         `;

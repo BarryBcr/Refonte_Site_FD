@@ -37,6 +37,23 @@
     min-height: 320px;
 }
 
+/* Couleurs spécifiques pour les testimonial cards */
+.testimonial-card blockquote {
+    color: #000000 !important; /* Texte du témoignage en noir */
+}
+
+.testimonial-card h4 {
+    color: #000000 !important; /* Nom en noir */
+}
+
+.testimonial-card p {
+    color: #000000 !important; /* Position en noir */
+}
+
+.testimonial-card .company {
+    color: #b388ff !important; /* Company en violet de la marque */
+}
+
 .testimonial-card::before {
     content: '';
     position: absolute;
