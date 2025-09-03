@@ -86,7 +86,7 @@
 }
 
 .testimonial-card-stack.middle .testimonial-text {
-    color: #64748b; /* Gris pour la carte middle */
+    color: white; 
 }
 
 .testimonial-card-stack.back {
@@ -97,7 +97,7 @@
 }
 
 .testimonial-card-stack.back .testimonial-text {
-    color: #64748b; /* Gris pour la carte back */
+    color: white; /* Gris pour la carte back */
 }
 
 /* Avatar */
@@ -143,7 +143,7 @@
 .testimonial-text {
     font-size: 1.125rem;
     font-style: italic;
-    color: #1f2937; /* Noir pour les cartes middle/back */
+    color: white; 
     line-height: 1.6;
     margin-bottom: 1.5rem;
     flex-grow: 1;
@@ -153,7 +153,10 @@
 }
 
 .testimonial-card-stack.front .testimonial-text {
-    color: #1f2937; /* Noir pour la carte front */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Auteur */
@@ -361,7 +364,7 @@
     }
     
     .testimonial-text {
-        color: #374151;
+        color: white;
     }
     
     .testimonial-author {
