@@ -442,15 +442,7 @@
   transform: rotateY(180deg);
 }
 
-.back::before {
-  position: absolute;
-  content: ' ';
-  display: block;
-  width: 160px;
-  height: 160%;
-  background: linear-gradient(90deg, transparent, #b388ff, #b388ff, #b388ff, #b388ff, transparent);
-  animation: rotation_481 5000ms infinite linear;
-}
+
 
 .back-content {
   position: absolute;

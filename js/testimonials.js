@@ -1,21 +1,23 @@
 /**
- * Testimonials Carousel
- * Gère l'affichage et la rotation automatique des témoignages
+ * Stacked Testimonials Carousel
+ * Gère l'affichage et l'interaction des témoignages empilés avec drag & drop
  */
-class TestimonialsCarousel {
+class StackedTestimonials {
     constructor() {
-        this.currentSlide = 0;
         this.testimonials = [];
-        this.autoPlayInterval = null;
-        this.autoPlayDelay = 5000; // 5 secondes
-        this.isPaused = false;
+        this.currentIndex = 0;
+        this.positions = ['front', 'middle', 'back'];
+        this.isDragging = false;
+        this.dragStartX = 0;
+        this.dragCurrentX = 0;
+        this.dragThreshold = 150;
         
         this.init();
     }
 
     async init() {
         try {
-            console.log('🔍 Initialisation du carrousel des témoignages...');
+            console.log('🔍 Initialisation du carrousel empilé des témoignages...');
             await this.loadTestimonials();
             console.log('📊 Témoignages chargés:', this.testimonials.length);
             
@@ -24,9 +26,7 @@ class TestimonialsCarousel {
             
             this.renderTestimonials();
             this.setupEventListeners();
-            this.startAutoPlay();
-            this.updateDots();
-            console.log('✅ Carrousel initialisé avec succès');
+            console.log('✅ Carrousel empilé initialisé avec succès');
         } catch (error) {
             console.error('❌ Erreur lors du chargement des témoignages:', error);
             this.showFallback();
@@ -39,11 +39,10 @@ class TestimonialsCarousel {
         const maxAttempts = 10;
         
         while (attempts < maxAttempts) {
-            const track = document.querySelector('.testimonials-track');
-            const dotsContainer = document.querySelector('.testimonial-dots');
+            const stack = document.querySelector('.testimonials-stack');
             
-            if (track && dotsContainer) {
-                console.log('✅ Éléments DOM trouvés après', attempts + 1, 'tentatives');
+            if (stack) {
+                console.log('✅ Élément DOM trouvé après', attempts + 1, 'tentatives');
                 return;
             }
             
@@ -52,7 +51,7 @@ class TestimonialsCarousel {
             await new Promise(resolve => setTimeout(resolve, 100));
         }
         
-        throw new Error('Éléments DOM non trouvés après plusieurs tentatives');
+        throw new Error('Élément DOM non trouvé après plusieurs tentatives');
     }
 
     async loadTestimonials() {
@@ -95,7 +94,6 @@ class TestimonialsCarousel {
             
         } catch (error) {
             console.warn('⚠️ Erreur de chargement, utilisation des témoignages par défaut:', error);
-            // Fallback si le fichier JSON n'est pas accessible
             this.testimonials = this.getDefaultTestimonials();
         }
     }
@@ -105,151 +103,96 @@ class TestimonialsCarousel {
         return [
             {
                 id: 1,
-                name: "Marie Dubois",
-                company: "E-commerce Plus",
-                position: "Directrice Marketing",
+                name: "Stephanie Rameau",
+                company: "Café de la place Saint Mars La brière",
+                position: "Gerante",
                 avatar: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMzIiIGZpbGw9InVybCgjZ3JhZGllbnQwX2xpbmVhcl8xXzEpIi8+CjxjaXJjbGUgY3g9IjMyIiBjeT0iMjQiIHI9IjEyIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMTYgNDhDMjQgNDAgMzIgNDAgNDAgNDgiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImdyYWRpZW50MF9saW5lYXJfMV8xIiB4MT0iMCIgeTE9IjAiIHgyPSI2NCIgeTI9IjY0IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIHN0b3AtY29sb3I9IiNiMzg4ZmYiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjOWI2ZGZmIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPC9zdmc+",
-                text: "FlairDigital a transformé notre stratégie digitale. Nos ventes en ligne ont augmenté de 40% en seulement 3 mois !",
+                text: "FlairDigital nous a aidés à automatiser l'animation commerciale du Café de la place. Résultat : plus de temps pour nos clients et une ambiance toujours dynamique !",
                 rating: 5
             },
             {
                 id: 2,
-                name: "Thomas Martin",
-                company: "TechStart",
-                position: "CEO",
-                avatar: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMzIiIGZpbGw9InVybCgjZ3JhZGllbnQwX2xpbmVhcl8xXzEpIi8+CjxjaXJjbGUgY3g9IjMyIiBjeT0iMjQiIHI9IjEyIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMTYgNDhDMjQgNDAgMzIgNDAgNDAgNDgiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImdyYWRpZW50MF9saW5lYXJfMV8xIiB4MT0iMCIgeTE9IjAiIHgyPSI2NCIgeTI9IjY0IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIHN0b3AtY29sb3I9IiNiMzg4ZmYiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjOWI2ZGZmIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPC9zdmc+",
-                text: "L'équipe de FlairDigital a su comprendre nos besoins et livrer des solutions sur mesure. Un partenaire de confiance !",
+                name: "Thony Meunier",
+                company: "Commercial independant",
+                position: "Commercial",
+                text: "Grâce à FlairDigital, j'ai pu trouver plus de clients grâce à la génération de prospects industriels et à la mise en place d'automatisations efficaces.",
                 rating: 5
             },
             {
                 id: 3,
-                name: "Sophie Bernard",
-                company: "Green Solutions",
-                position: "Responsable Communication",
-                avatar: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMzIiIGZpbGw9InVybCgjZ3JhZGllbnQwX2xpbmVhcl8xXzEpIi8+CjxjaXJjbGUgY3g9IjMyIiBjeT0iMjQiIHI9IjEyIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMTYgNDhDMjQgNDAgMzIgNDAgNDAgNDgiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImdyYWRpZW50MF9saW5lYXJfMV8xIiB4MT0iMCIgeTE9IjAiIHgyPSI2NCIgeTI9IjY0IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIHN0b3AtY29sb3I9IiNiMzg4ZmYiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjOWI2ZGZmIi8+CjwvbGluYXI+",
-                text: "Excellente collaboration ! FlairDigital nous a aidés à moderniser notre présence en ligne avec professionnalisme.",
-                rating: 5
-            },
-            {
-                id: 4,
-                name: "Lucas Moreau",
-                company: "Innov'Consulting",
-                position: "Fondateur",
-                avatar: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMzIiIGZpbGw9InVybCgjZ3JhZGllbnQwX2xpbmVhcl8xXzEpIi8+CjxjaXJjbGUgY3g9IjMyIiBjeT0iMjQiIHI9IjEyIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMTYgNDhDMjQgNDAgMzIgNDAgNDAgNDgiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImdyYWRpZW50MF9saW5lYXJfMV8xIiB4MT0iMCIgeTE9IjAiIHgyPSI2NCIgeTI9IjY0IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIHN0b3AtY29sb3I9IiNiMzg4ZmYiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjOWI2ZGZmIi8+CjwvbGluYXI+",
-                text: "Grâce à FlairDigital, notre visibilité sur les réseaux sociaux a explosé. ROI exceptionnel sur nos investissements !",
-                rating: 5
-            },
-            {
-                id: 5,
-                name: "Emma Rousseau",
-                company: "BioMarket",
-                position: "Directrice Commerciale",
-                avatar: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMzIiIGZpbGw9InVybCgjZ3JhZGllbnQwX2xpbmVhcl8xXzEpIi8+CjxjaXJjbGUgY3g9IjMyIiBjeT0iMjQiIHI9IjEyIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMTYgNDhDMjQgNDAgMzIgNDAgNDAgNDgiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImdyYWRpZW50MF9saW5lYXJfMV8xIiB4MT0iMCIgeTE9IjAiIHgyPSI2NCIgeTI9IjY0IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIHN0b3AtY29sb3I9IiNiMzg4ZmYiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjOWI2ZGZmIi8+CjwvbGluYXI+",
-                text: "FlairDigital a créé une stratégie d'automatisation qui nous fait gagner 15h par semaine. Incroyable !",
+                name: "Jerome Cosset",
+                company: "Bien être by Jerôme",
+                position: "Magnétiseur",
+                avatar: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMzIiIGZpbGw9InVybCgjZ3JhZGllbnQwX2xpbmVhcl8xXzEpIi8+CjxjaXJjbGUgY3g9IjMyIiBjeT0iMjQiIHI9IjEyIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMTYgNDhDMjQgNDAgMzIgNDAgNDAgNDgiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImdyYWRpZW50MF9saW5lYXJfMV8xIiB4MT0iMCIgeTE9IjAiIHgyPSI2NCIgeTI9IjY0IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CjxzdG9wIHN0b3AtY29sb3I9IiNiMzg4ZmYiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjOWI2ZGZmIi8+CjwvbGluZWFyR3JhZGllbnQ+CjwvZGVmcz4KPC9zdmc+",
+                text: "FlairDigital m'a aidé à développer mon activité sur la région en me générant des rendez-vous qualifiés avec des personnes en recherche de thérapeutes. Nous avons utilisé de la publicité Meta pour cibler efficacement ces prospects.",
                 rating: 5
             }
         ];
     }
 
     renderTestimonials() {
-        console.log('🎨 Rendu des témoignages...');
-        const track = document.querySelector('.testimonials-track');
-        const dotsContainer = document.querySelector('.testimonial-dots');
+        console.log('🎨 Rendu des témoignages empilés...');
+        const stack = document.querySelector('.testimonials-stack');
         
-        console.log('🔍 Éléments trouvés:', { 
-            track: !!track, 
-            dotsContainer: !!dotsContainer,
-            trackElement: track,
-            dotsElement: dotsContainer
-        });
-        
-        if (!track || !dotsContainer) {
-            console.error('❌ Éléments manquants pour le rendu');
-            console.error('Track:', track);
-            console.error('DotsContainer:', dotsContainer);
+        if (!stack) {
+            console.error('❌ Élément stack non trouvé');
             return;
         }
 
-        console.log('📏 Éléments DOM valides, début du rendu...');
-
         // Vider le contenu existant
-        track.innerHTML = '';
-        dotsContainer.innerHTML = '';
+        stack.innerHTML = '';
 
-        // Calculer la largeur du track basée sur le nombre de témoignages
-        const slideWidth = 100 / this.testimonials.length;
-        track.style.width = `${this.testimonials.length * 100}%`;
+        // Afficher les 3 premiers témoignages
+        const visibleTestimonials = this.getVisibleTestimonials();
         
-        console.log('📏 Dimensions calculées:', { 
-            slideWidth: `${slideWidth}%`, 
-            trackWidth: `${this.testimonials.length * 100}%`,
-            testimonialsCount: this.testimonials.length
+        visibleTestimonials.forEach((testimonial, index) => {
+            const card = this.createTestimonialCard(testimonial, this.positions[index]);
+            stack.appendChild(card);
+            console.log(`✅ Carte ${index + 1} créée et ajoutée`);
         });
 
-        // Créer les slides
-        this.testimonials.forEach((testimonial, index) => {
-            console.log(`🎭 Création du slide ${index + 1}/${this.testimonials.length}:`, testimonial.name);
-            const slide = this.createTestimonialSlide(testimonial, slideWidth);
-            console.log(`📦 Slide créé:`, slide);
-            track.appendChild(slide);
-            console.log(`✅ Slide ${index + 1} ajouté au track`);
-
-            // Créer les dots
-            const dot = this.createDot(index);
-            dotsContainer.appendChild(dot);
-            console.log(`🔘 Dot ${index + 1} ajouté`);
-        });
-
-        console.log('📊 Contenu final du track:', track.innerHTML.length, 'caractères');
-        console.log('📊 Contenu final des dots:', dotsContainer.innerHTML.length, 'caractères');
-
-        // Mettre à jour la position initiale
-        this.updateSlidePosition();
         console.log('✅ Rendu terminé');
     }
 
-    createTestimonialSlide(testimonial, slideWidth) {
-        const slide = document.createElement('div');
-        slide.className = 'testimonial-slide flex-shrink-0';
-        slide.style.width = `${slideWidth}%`;
-        slide.style.padding = '0 1rem';
+    getVisibleTestimonials() {
+        const visible = [];
+        for (let i = 0; i < 3; i++) {
+            const index = (this.currentIndex + i) % this.testimonials.length;
+            visible.push(this.testimonials[index]);
+        }
+        return visible;
+    }
 
+    createTestimonialCard(testimonial, position) {
+        const card = document.createElement('div');
+        card.className = `testimonial-card-stack ${position}`;
+        card.setAttribute('data-testimonial-id', testimonial.id);
+        
         // Gestion intelligente des avatars
         let avatarHtml = '';
         if (testimonial.avatar) {
-            // Avatar fourni (image ou SVG)
-            avatarHtml = `<img src="${testimonial.avatar}" alt="${testimonial.name}" class="w-16 h-16 rounded-full mx-auto mb-4 object-cover">`;
+            avatarHtml = `<img src="${testimonial.avatar}" alt="${testimonial.name}" class="testimonial-avatar">`;
         } else {
-            // Pas d'avatar - utiliser les initiales avec le style par défaut
             const initials = testimonial.name.split(' ').map(n => n.charAt(0)).join('').toUpperCase();
-            avatarHtml = `<div class="avatar-default w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-xl font-bold">${initials}</div>`;
+            avatarHtml = `<div class="testimonial-avatar-default">${initials}</div>`;
         }
 
-        slide.innerHTML = `
-            <div class="testimonial-card bg-white rounded-xl shadow-lg p-6 md:p-8 h-full flex flex-col justify-between">
-                <div class="text-center">
-                    ${avatarHtml}
-                    <div class="stars mb-4">
-                        ${this.generateStars(testimonial.rating)}
-                    </div>
-                    <blockquote class="text-black text-lg mb-6 italic">
-                        "${testimonial.text}"
-                    </blockquote>
-                </div>
-                <div class="text-center">
-                    <h4 class="font-semibold text-black text-lg">${testimonial.name}</h4>
-                    <p class="text-black text-sm">${testimonial.position}</p>
-                    <p class="company text-[#b388ff] font-medium text-sm">${testimonial.company}</p>
-                </div>
+        card.innerHTML = `
+            ${avatarHtml}
+            <div class="testimonial-stars">
+                ${this.generateStars(testimonial.rating)}
             </div>
+            <div class="testimonial-text">"${testimonial.text}"</div>
+            <div class="testimonial-author">${testimonial.name}</div>
+            <div class="testimonial-company">${testimonial.position} @ ${testimonial.company}</div>
         `;
 
-        return slide;
+        return card;
     }
 
     generateStars(rating) {
-        const fullStar = '<svg class="w-5 h-5 text-yellow-400 inline" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>';
-        const emptyStar = '<svg class="w-5 h-5 text-gray-300 inline" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>';
+        const fullStar = '<svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>';
+        const emptyStar = '<svg fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>';
         
         let stars = '';
         for (let i = 1; i <= 5; i++) {
@@ -258,207 +201,161 @@ class TestimonialsCarousel {
         return stars;
     }
 
-    createDot(index) {
-        const dot = document.createElement('button');
-        dot.className = 'w-3 h-3 rounded-full transition-all duration-300';
-        dot.setAttribute('data-slide', index);
-        
-        if (index === 0) {
-            dot.classList.add('bg-blue-600');
-        } else {
-            dot.classList.add('bg-gray-300');
-        }
-
-        dot.addEventListener('click', () => {
-            this.goToSlide(index);
-        });
-
-        return dot;
-    }
-
     setupEventListeners() {
         console.log('🔧 Configuration des événements...');
         
-        // Navigation arrows
-        const prevBtn = document.querySelector('.testimonial-nav.prev');
-        const nextBtn = document.querySelector('.testimonial-nav.next');
-
-        console.log('🔍 Boutons trouvés:', { prev: !!prevBtn, next: !!nextBtn });
-
-        if (prevBtn) {
-            prevBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                console.log('⬅️ Bouton précédent cliqué');
-                this.previousSlide();
-            });
-        }
-        if (nextBtn) {
-            nextBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                console.log('➡️ Bouton suivant cliqué');
-                this.nextSlide();
-            });
+        const stack = document.querySelector('.testimonials-stack');
+        if (!stack) {
+            console.error('❌ Stack non trouvé pour les événements');
+            return;
         }
 
-        // Pause auto-play on hover/touch
-        const container = document.querySelector('.testimonials-carousel-container');
-        if (container) {
-            container.addEventListener('mouseenter', () => this.pauseAutoPlay());
-            container.addEventListener('mouseleave', () => this.resumeAutoPlay());
-            
-            // Gestion mobile : pause au touch
-            container.addEventListener('touchstart', () => {
-                console.log('👆 Touch détecté - pause auto-play');
-                this.pauseAutoPlay();
-            });
-            
-            container.addEventListener('touchend', () => {
-                console.log('👆 Touch terminé - reprise auto-play');
-                setTimeout(() => this.resumeAutoPlay(), 1000); // Reprise après 1 seconde
-            });
-        }
+        // Événements de souris
+        stack.addEventListener('mousedown', (e) => this.handleDragStart(e));
+        document.addEventListener('mousemove', (e) => this.handleDragMove(e));
+        document.addEventListener('mouseup', (e) => this.handleDragEnd(e));
 
-        // Touch events for mobile
-        this.setupTouchEvents();
-        
+        // Événements tactiles
+        stack.addEventListener('touchstart', (e) => this.handleDragStart(e), { passive: false });
+        document.addEventListener('touchmove', (e) => this.handleDragMove(e), { passive: false });
+        document.addEventListener('touchend', (e) => this.handleDragEnd(e));
+
+        // Événements clavier pour l'accessibilité
+        stack.addEventListener('keydown', (e) => this.handleKeyDown(e));
+
         console.log('✅ Événements configurés');
     }
 
-    setupTouchEvents() {
-        console.log('📱 Configuration des événements tactiles...');
-        const track = document.querySelector('.testimonials-track');
-        if (!track) {
-            console.error('❌ Track non trouvé pour les événements tactiles');
-            return;
-        }
+    handleDragStart(e) {
+        const frontCard = document.querySelector('.testimonial-card-stack.front');
+        if (!frontCard) return;
 
-        let startX = 0;
-        let currentX = 0;
-        let isDragging = false;
+        // Vérifier si on clique sur la carte du devant
+        if (!frontCard.contains(e.target)) return;
 
-        track.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].clientX;
-            isDragging = true;
-            console.log('👆 Touch start:', startX);
-            this.pauseAutoPlay();
-        });
-
-        track.addEventListener('touchmove', (e) => {
-            if (!isDragging) return;
-            currentX = e.touches[0].clientX;
-        });
-
-        track.addEventListener('touchend', () => {
-            if (!isDragging) return;
-            
-            const diff = startX - currentX;
-            const threshold = 50;
-
-            console.log('👆 Touch end - diff:', diff, 'threshold:', threshold);
-
-            if (Math.abs(diff) > threshold) {
-                if (diff > 0) {
-                    console.log('👆 Swipe gauche - slide suivant');
-                    this.nextSlide();
-                } else {
-                    console.log('👆 Swipe droite - slide précédent');
-                    this.previousSlide();
-                }
-            }
-
-            isDragging = false;
-            setTimeout(() => this.resumeAutoPlay(), 1000);
-        });
+        this.isDragging = true;
+        this.dragStartX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
         
-        console.log('✅ Événements tactiles configurés');
-    }
-
-    nextSlide() {
-        this.currentSlide = (this.currentSlide + 1) % this.testimonials.length;
-        this.updateSlidePosition();
-        this.updateDots();
-    }
-
-    previousSlide() {
-        this.currentSlide = this.currentSlide === 0 ? 
-            this.testimonials.length - 1 : this.currentSlide - 1;
-        this.updateSlidePosition();
-        this.updateDots();
-    }
-
-    goToSlide(index) {
-        this.currentSlide = index;
-        this.updateSlidePosition();
-        this.updateDots();
-    }
-
-    updateSlidePosition() {
-        const track = document.querySelector('.testimonials-track');
-        if (!track) return;
-
-        const slideWidth = 100 / this.testimonials.length;
-        const translateX = -(this.currentSlide * slideWidth);
-        track.style.transform = `translateX(${translateX}%)`;
-    }
-
-    updateDots() {
-        console.log('🔘 Mise à jour des points indicateurs - slide actuel:', this.currentSlide);
-        const dots = document.querySelectorAll('.testimonial-dots button');
+        frontCard.classList.add('dragging');
+        console.log('👆 Début du drag');
         
-        dots.forEach((dot, index) => {
-            // Retirer toutes les classes de couleur
-            dot.classList.remove('bg-blue-600', 'bg-gray-300', 'active');
-            
-            if (index === this.currentSlide) {
-                dot.classList.add('active');
-                console.log(`🔘 Point ${index} activé (bleu)`);
+        e.preventDefault();
+    }
+
+    handleDragMove(e) {
+        if (!this.isDragging) return;
+
+        const frontCard = document.querySelector('.testimonial-card-stack.front');
+        if (!frontCard) return;
+
+        this.dragCurrentX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
+        const deltaX = this.dragCurrentX - this.dragStartX;
+
+        // Appliquer l'effet visuel de drag
+        if (Math.abs(deltaX) > 20) {
+            if (deltaX < 0) {
+                frontCard.classList.add('drag-left');
+                frontCard.classList.remove('drag-right');
             } else {
-                console.log(`🔘 Point ${index} désactivé (gris)`);
+                frontCard.classList.add('drag-right');
+                frontCard.classList.remove('drag-left');
+            }
+        }
+
+        e.preventDefault();
+    }
+
+    handleDragEnd(e) {
+        if (!this.isDragging) return;
+
+        const frontCard = document.querySelector('.testimonial-card-stack.front');
+        if (!frontCard) return;
+
+        this.isDragging = false;
+        const deltaX = this.dragCurrentX - this.dragStartX;
+
+        // Nettoyer les classes de drag
+        frontCard.classList.remove('dragging', 'drag-left', 'drag-right');
+
+        // Vérifier si le seuil de swipe est atteint
+        if (Math.abs(deltaX) > this.dragThreshold) {
+            if (deltaX < 0) {
+                // Swipe vers la gauche - passer au suivant
+                console.log('👆 Swipe gauche détecté - passage au suivant');
+                this.nextTestimonial();
+            } else {
+                // Swipe vers la droite - passer au précédent
+                console.log('👆 Swipe droite détecté - passage au précédent');
+                this.previousTestimonial();
+            }
+        }
+
+        this.dragStartX = 0;
+        this.dragCurrentX = 0;
+    }
+
+    handleKeyDown(e) {
+        const frontCard = document.querySelector('.testimonial-card-stack.front');
+        if (!frontCard || !frontCard.contains(e.target)) return;
+
+        switch (e.key) {
+            case 'ArrowLeft':
+                e.preventDefault();
+                this.previousTestimonial();
+                break;
+            case 'ArrowRight':
+                e.preventDefault();
+                this.nextTestimonial();
+                break;
+            case ' ':
+            case 'Enter':
+                e.preventDefault();
+                this.nextTestimonial();
+                break;
+        }
+    }
+
+    nextTestimonial() {
+        this.currentIndex = (this.currentIndex + 1) % this.testimonials.length;
+        this.updatePositions();
+        console.log('➡️ Passage au témoignage suivant:', this.currentIndex);
+    }
+
+    previousTestimonial() {
+        this.currentIndex = this.currentIndex === 0 ? 
+            this.testimonials.length - 1 : this.currentIndex - 1;
+        this.updatePositions();
+        console.log('⬅️ Passage au témoignage précédent:', this.currentIndex);
+    }
+
+    updatePositions() {
+        const cards = document.querySelectorAll('.testimonial-card-stack');
+        const visibleTestimonials = this.getVisibleTestimonials();
+
+        // Effet de push : les cartes glissent naturellement vers leur nouvelle position
+        cards.forEach((card, index) => {
+            const testimonial = visibleTestimonials[index];
+            const newPosition = this.positions[index];
+            
+            // Mettre à jour la classe de position pour déclencher la transition CSS
+            card.className = `testimonial-card-stack ${newPosition}`;
+            
+            // Mettre à jour le contenu si c'est une nouvelle carte
+            if (testimonial && card.getAttribute('data-testimonial-id') !== testimonial.id.toString()) {
+                // Créer la nouvelle carte avec le bon contenu
+                const newCard = this.createTestimonialCard(testimonial, newPosition);
+                newCard.className = `testimonial-card-stack ${newPosition}`;
+                card.parentNode.replaceChild(newCard, card);
             }
         });
-    }
-
-    startAutoPlay() {
-        console.log('🔄 Démarrage de la rotation automatique...');
-        if (this.autoPlayInterval) {
-            clearInterval(this.autoPlayInterval);
-        }
-        
-        // Vérifier que nous avons des témoignages
-        if (this.testimonials.length <= 1) {
-            console.log('⚠️ Pas assez de témoignages pour l\'auto-play');
-            return;
-        }
-        
-        this.autoPlayInterval = setInterval(() => {
-            if (!this.isPaused) {
-                console.log('🔄 Rotation automatique - passage au slide suivant');
-                this.nextSlide();
-            } else {
-                console.log('⏸️ Auto-play en pause');
-            }
-        }, this.autoPlayDelay);
-        
-        console.log('✅ Rotation automatique démarrée avec un délai de', this.autoPlayDelay, 'ms');
-        console.log('📱 Compatible mobile:', 'ontouchstart' in window);
-    }
-
-    pauseAutoPlay() {
-        console.log('⏸️ Pause de la rotation automatique');
-        this.isPaused = true;
-    }
-
-    resumeAutoPlay() {
-        console.log('▶️ Reprise de la rotation automatique');
-        this.isPaused = false;
     }
 
     showFallback() {
-        const container = document.querySelector('.testimonials-carousel-container');
+        const container = document.querySelector('.testimonials-stack-container');
         if (container) {
             container.innerHTML = `
                 <div class="text-center py-12">
-                    <p class="text-gray-600">Chargement des témoignages...</p>
+                    <p class="text-slate-400">Chargement des témoignages...</p>
                 </div>
             `;
         }
@@ -467,12 +364,12 @@ class TestimonialsCarousel {
 
 // Initialiser le carrousel quand le DOM est chargé
 document.addEventListener('DOMContentLoaded', () => {
-    new TestimonialsCarousel();
+    new StackedTestimonials();
 });
 
 // Initialiser aussi si la section est chargée dynamiquement
 if (typeof window !== 'undefined') {
-    window.initTestimonialsCarousel = () => {
-        new TestimonialsCarousel();
+    window.initStackedTestimonials = () => {
+        new StackedTestimonials();
     };
 }
