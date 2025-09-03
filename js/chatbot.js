@@ -279,6 +279,9 @@ class ChatbotManager {
             const aiResponse = await this.callN8nWebhook(message);
             console.log('✅ [DEBUG] Réponse IA reçue:', aiResponse);
             
+            // Supprimer le loader de chat avant d'ajouter la réponse
+            this.removeTypingLoader();
+            
             // Ajouter la réponse de l'IA
             this.addMessage('bot', aiResponse);
             
@@ -294,6 +297,9 @@ class ChatbotManager {
         } catch (error) {
             console.error('💥 [DEBUG] Erreur dans sendMessage:', error);
             console.error('💥 [DEBUG] Stack trace:', error.stack);
+            
+            // Supprimer le loader de chat en cas d'erreur
+            this.removeTypingLoader();
             
             // Message d'erreur pour l'utilisateur
             const errorMessage = 'Désolé, je rencontre des difficultés techniques. Veuillez réessayer dans quelques instants.';
@@ -428,18 +434,26 @@ class ChatbotManager {
         this.sendButton.disabled = processing;
         
         if (processing) {
+            // Afficher le loader sur le bouton (ancien comportement)
             this.sendButton.innerHTML = `
                 <svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
             `;
+            
+            // Ajouter le loader de chat avec 3 points
+            this.addTypingLoader();
         } else {
+            // Restaurer le bouton normal
             this.sendButton.innerHTML = `
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
                 </svg>
             `;
+            
+            // Supprimer le loader de chat
+            this.removeTypingLoader();
         }
     }
 
@@ -461,6 +475,42 @@ class ChatbotManager {
 
         // Scroll vers le bas
         this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+    }
+
+    // Ajouter le loader de chat avec 3 points animés
+    addTypingLoader() {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'flex justify-start';
+        messageDiv.id = 'typing-loader-message';
+
+        const messageBubble = document.createElement('div');
+        messageBubble.className = 'max-w-xs lg:max-w-md px-4 py-2 rounded-lg bg-gray-700 text-gray-200 rounded-bl-none';
+
+        const typingLoader = document.createElement('div');
+        typingLoader.className = 'typing-loader';
+        
+        // Créer les 3 points
+        for (let i = 0; i < 3; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'typing-dot';
+            typingLoader.appendChild(dot);
+        }
+
+        messageBubble.appendChild(typingLoader);
+        messageDiv.appendChild(messageBubble);
+
+        this.chatMessages.appendChild(messageDiv);
+
+        // Scroll vers le bas
+        this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+    }
+
+    // Supprimer le loader de chat
+    removeTypingLoader() {
+        const typingLoader = document.getElementById('typing-loader-message');
+        if (typingLoader) {
+            typingLoader.remove();
+        }
     }
 
     closeChat() {
