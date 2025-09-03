@@ -49,11 +49,12 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(30, 41, 59, 0.8);
+    background: rgba(30, 41, 59, 0.9);
     border: 2px solid rgba(71, 85, 105, 0.5);
     border-radius: 1rem;
     padding: 1.5rem;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    -webkit-backdrop-filter: blur(16px);
     backdrop-filter: blur(16px);
     display: flex;
     flex-direction: column;
@@ -64,6 +65,7 @@
     cursor: grab;
     user-select: none;
     z-index: 1;
+    color: white;
 }
 
 .testimonial-card-stack:active {
@@ -355,23 +357,24 @@
     outline-offset: 4px;
 }
 
-/* Mode sombre (déjà sombre par défaut) */
-@media (prefers-color-scheme: light) {
+/* Forcer le mode sombre sur tous les navigateurs */
+.testimonial-card-stack {
+    background: rgba(30, 41, 59, 0.9) !important;
+    border-color: rgba(71, 85, 105, 0.5) !important;
+    color: white !important;
+}
+
+/* Fallback pour backdrop-filter sur iOS/Safari */
+@supports not (backdrop-filter: blur(16px)) {
     .testimonial-card-stack {
-        background: rgba(255, 255, 255, 0.9);
-        border-color: rgba(0, 0, 0, 0.1);
-        color: #1f2937;
+        background: rgba(30, 41, 59, 0.95) !important;
     }
-    
-    .testimonial-text {
-        color: white;
-    }
-    
-    .testimonial-author {
-        color: #7c3aed;
-    }
-    
-    .testimonial-company {
-        color: #6b7280;
+}
+
+/* Support spécifique pour iOS/Safari */
+@supports (-webkit-backdrop-filter: blur(16px)) {
+    .testimonial-card-stack {
+        -webkit-backdrop-filter: blur(16px);
+        backdrop-filter: blur(16px);
     }
 }
