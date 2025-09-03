@@ -11,6 +11,28 @@
     padding: 50px 0; /* Ajouter du padding pour éviter les débordements */
 }
 
+/* Ajustement de la hauteur pour mobile */
+@media (max-width: 768px) {
+    .testimonials-stack-container {
+        min-height: 400px;
+        padding: 40px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .testimonials-stack-container {
+        min-height: 350px;
+        padding: 30px 0;
+    }
+}
+
+/* Padding mobile pour cohérence avec les services */
+@media (max-width: 480px) {
+    .testimonials-stack-container {
+        padding: 30px 24px; /* Même padding que les services mobile */
+    }
+}
+
 /* Stack de cartes */
 .testimonials-stack {
     position: relative;
@@ -225,83 +247,87 @@
 /* Responsive Design */
 @media (max-width: 768px) {
     .testimonials-stack {
-        width: 300px;
-        height: 400px;
+        width: 80%;
+        max-width: 280px;
+        height: 320px;
+        margin-left: -10px; /* Décalage vers la gauche */
     }
     
     .testimonial-card-stack {
-        padding: 1.25rem;
+        padding: 0.9rem;
     }
     
     .testimonial-avatar,
     .testimonial-avatar-default {
-        width: 100px;
-        height: 100px;
-        font-size: 1.5rem;
-    }
-    
-    .testimonial-text {
+        width: 70px;
+        height: 70px;
         font-size: 1rem;
     }
     
+    .testimonial-text {
+        font-size: 0.85rem;
+    }
+    
     .testimonial-author {
-        font-size: 0.8rem;
+        font-size: 0.7rem;
     }
     
     .testimonial-company {
-        font-size: 0.7rem;
+        font-size: 0.6rem;
     }
     
     /* Ajustement des positions pour mobile */
     .testimonial-card-stack.middle {
-        transform: rotate(0deg) translateX(25%);
+        transform: rotate(0deg) translateX(18%);
     }
     
     .testimonial-card-stack.back {
-        transform: rotate(4deg) translateX(50%);
+        transform: rotate(2deg) translateX(35%);
     }
 }
 
 @media (max-width: 480px) {
     .testimonials-stack {
-        width: 280px;
-        height: 380px;
+        width: 75%;
+        max-width: 260px;
+        height: 300px;
+        margin-left: -15px; /* Décalage vers la gauche plus prononcé */
     }
     
     .testimonial-card-stack {
-        padding: 1rem;
+        padding: 0.7rem;
     }
     
     .testimonial-avatar,
     .testimonial-avatar-default {
-        width: 80px;
-        height: 80px;
-        font-size: 1.25rem;
-    }
-    
-    .testimonial-text {
+        width: 60px;
+        height: 60px;
         font-size: 0.9rem;
     }
     
-    .testimonial-author {
+    .testimonial-text {
         font-size: 0.75rem;
     }
     
-    .testimonial-company {
+    .testimonial-author {
         font-size: 0.65rem;
+    }
+    
+    .testimonial-company {
+        font-size: 0.55rem;
     }
     
     /* Réduction des rotations pour mobile */
     .testimonial-card-stack.front {
-        transform: rotate(-3deg) translateX(0%);
+        transform: rotate(-2deg) translateX(0%);
     }
     
     .testimonial-card-stack.middle {
-        transform: rotate(0deg) translateX(20%);
+        transform: rotate(0deg) translateX(12%);
     }
     
     .testimonial-card-stack.back {
-        transform: rotate(3deg) translateX(40%);
+        transform: rotate(2deg) translateX(25%);
     }
 }
 

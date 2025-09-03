@@ -19,5 +19,7 @@ build/
 
 # Dossiers de développement
 .cursor/
-.gestion-du-codePROJET_SUIVI.md
+
+# Fichiers de documentation (toujours ignorés)
 PROJET_SUIVI.md
+CHATBOT_SPECIFICATIONS.md
