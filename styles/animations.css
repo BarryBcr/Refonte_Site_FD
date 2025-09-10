@@ -262,6 +262,33 @@
     animation: slideOutNotification 0.3s ease-in;
 }
 
+/* Overlay enter/leave animations for chatbot fullscreen */
+@keyframes overlayFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes overlaySlideUp {
+    from { transform: translateY(20px); }
+    to { transform: translateY(0); }
+}
+
+.overlay-enter {
+    animation: overlayFadeIn 200ms ease-out;
+}
+
+.overlay-panel-enter {
+    animation: overlaySlideUp 240ms ease-out;
+}
+
+.overlay-exit {
+    animation: overlayFadeIn 200ms ease-out reverse;
+}
+
+.overlay-panel-exit {
+    animation: overlaySlideUp 240ms ease-out reverse;
+}
+
 /* Animation de parallaxe */
 .parallax {
     transition: transform 0.1s ease-out;

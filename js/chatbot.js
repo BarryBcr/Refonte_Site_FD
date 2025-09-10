@@ -38,6 +38,8 @@ class ChatbotManager {
         if (this.chatbotForm) {
             this.setupEventListeners();
             this.setupValidation();
+            // Tenter de restaurer une session existante
+            this.tryRestoreSessionOnLoad();
         }
     }
 
@@ -220,8 +222,14 @@ class ChatbotManager {
         // Afficher l'interface de chat
         this.chatbotInterface.classList.remove('hidden');
 
+        // Plein écran sur mobile + scroll lock + animation + focus
+        this.enterFullscreenOverlayIfMobile();
+
         // Démarrer la conversation
         this.startConversation();
+
+        // Sauvegarder l'état initial (avec message de bienvenue ajouté ensuite)
+        this.saveSessionToStorage();
     }
 
     startConversation() {
@@ -229,13 +237,19 @@ class ChatbotManager {
         
         // Message de bienvenue
         this.addMessage('bot', `Bonjour ${this.userName} ! 👋 Comment puis-je vous aider aujourd'hui ?`);
+        this.conversation.push({
+            type: 'bot',
+            content: `Bonjour ${this.userName} ! 👋 Comment puis-je vous aider aujourd'hui ?`,
+            timestamp: new Date().toISOString()
+        });
+        this.saveSessionToStorage();
         
         // Activer l'input et le bouton d'envoi
         this.chatInput.disabled = false;
         this.sendButton.disabled = false;
         
         // Focus sur l'input
-        this.chatInput.focus();
+        setTimeout(() => this.chatInput && this.chatInput.focus(), 50);
     }
 
     async sendMessage() {
@@ -291,6 +305,7 @@ class ChatbotManager {
                 content: aiResponse,
                 timestamp: new Date().toISOString()
             });
+            this.saveSessionToStorage();
             
             console.log('📚 [DEBUG] Historique final mis à jour, longueur:', this.conversation.length);
             
@@ -514,29 +529,33 @@ class ChatbotManager {
     }
 
     closeChat() {
-        // Masquer l'interface de chat
-        this.chatbotInterface.classList.add('hidden');
+        // Animation de sortie si overlay actif
+        const wasOverlay = this.chatbotInterface.classList.contains('chat-overlay');
+        if (wasOverlay) {
+            this.addTemporaryClass(this.chatbotInterface, 'overlay-exit', 220);
+            const panel = this.chatbotInterface.querySelector('.info-card');
+            if (panel) this.addTemporaryClass(panel, 'overlay-panel-exit', 240);
+        }
 
-        // Réafficher le formulaire de collecte
-        this.chatbotCollect.classList.remove('hidden');
+        // Retirer l'overlay et réactiver le scroll
+        this.exitFullscreenOverlayIfNeeded();
 
-        // Réinitialiser le formulaire
-        this.chatbotForm.reset();
+        // Masquer l'interface de chat après l'animation
+        setTimeout(() => {
+            this.chatbotInterface.classList.add('hidden');
+            // Réafficher le formulaire de collecte
+            this.chatbotCollect.classList.remove('hidden');
+        }, wasOverlay ? 240 : 0);
 
-        // Vider les messages
-        this.chatMessages.innerHTML = '';
-
-        // Désactiver le chat
+        // NE PAS effacer la session pour permettre restauration
+        // Réinitialiser seulement l'UI immédiate
         this.isChatActive = false;
         this.chatInput.disabled = true;
         this.sendButton.disabled = true;
-
-        // Réinitialiser les variables
-        this.userName = '';
-        this.userEmail = '';
-        this.sessionId = '';
-        this.conversation = [];
         this.isProcessing = false;
+
+        // Vider l'affichage des messages (sauvegarde déjà en localStorage)
+        this.chatMessages.innerHTML = '';
 
         // Nettoyer les erreurs
         const inputs = this.chatbotForm.querySelectorAll('input');
@@ -578,6 +597,100 @@ class ChatbotManager {
         this.chatInput.scrollTop = 0;
     }
 }
+
+/* ===== Extensions: overlay & session persistence ===== */
+ChatbotManager.prototype.isMobileViewport = function() {
+    return typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
+};
+
+ChatbotManager.prototype.enterFullscreenOverlayIfMobile = function() {
+    if (!this.isMobileViewport()) return;
+    if (!this.chatbotInterface) return;
+    // Appliquer classes d'overlay et animations
+    this.chatbotInterface.classList.add('chat-overlay');
+    this.addTemporaryClass(this.chatbotInterface, 'overlay-enter', 200);
+    const panel = this.chatbotInterface.querySelector('.info-card');
+    if (panel) this.addTemporaryClass(panel, 'overlay-panel-enter', 240);
+    // Scroll lock
+    if (document && document.body) {
+        document.body.classList.add('no-scroll');
+    }
+};
+
+ChatbotManager.prototype.exitFullscreenOverlayIfNeeded = function() {
+    if (!this.chatbotInterface) return;
+    this.chatbotInterface.classList.remove('chat-overlay');
+    if (document && document.body) {
+        document.body.classList.remove('no-scroll');
+    }
+};
+
+ChatbotManager.prototype.addTemporaryClass = function(element, className, durationMs = 200) {
+    if (!element) return;
+    element.classList.add(className);
+    setTimeout(() => element.classList.remove(className), durationMs);
+};
+
+ChatbotManager.prototype.saveSessionToStorage = function() {
+    try {
+        const payload = {
+            sessionId: this.sessionId,
+            userName: this.userName,
+            userEmail: this.userEmail,
+            conversation: this.conversation,
+            updatedAt: Date.now()
+        };
+        localStorage.setItem('fd_chat_session', JSON.stringify(payload));
+    } catch (_) { /* ignore storage errors */ }
+};
+
+ChatbotManager.prototype.loadSessionFromStorage = function() {
+    try {
+        const raw = localStorage.getItem('fd_chat_session');
+        if (!raw) return null;
+        const data = JSON.parse(raw);
+        if (!data || !data.sessionId) return null;
+        return data;
+    } catch (_) {
+        return null;
+    }
+};
+
+ChatbotManager.prototype.tryRestoreSessionOnLoad = function() {
+    const saved = this.loadSessionFromStorage();
+    if (!saved) return;
+
+    // Restaurer l'état
+    this.sessionId = saved.sessionId;
+    this.userName = saved.userName || '';
+    this.userEmail = saved.userEmail || '';
+    this.conversation = Array.isArray(saved.conversation) ? saved.conversation : [];
+
+    // Basculer UI en mode chat
+    if (this.chatbotCollect) this.chatbotCollect.classList.add('hidden');
+    if (this.chatbotInterface) this.chatbotInterface.classList.remove('hidden');
+
+    // Plein écran si mobile
+    this.enterFullscreenOverlayIfMobile();
+
+    // Activer l'input et reconstruire l'historique
+    this.isChatActive = true;
+    this.chatInput.disabled = false;
+    this.sendButton.disabled = false;
+    this.renderConversationFromState();
+
+    // Focus input
+    setTimeout(() => this.chatInput && this.chatInput.focus(), 50);
+};
+
+ChatbotManager.prototype.renderConversationFromState = function() {
+    if (!this.chatMessages) return;
+    this.chatMessages.innerHTML = '';
+    this.conversation.forEach(msg => {
+        const sender = msg.type === 'user' ? 'user' : 'bot';
+        this.addMessage(sender, msg.content);
+    });
+};
 
 // Initialisation
 document.addEventListener('DOMContentLoaded', () => {

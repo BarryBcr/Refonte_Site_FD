@@ -201,6 +201,11 @@
     background: #9b6dff;
 }
 
+/* Scroll lock when overlay is open */
+.no-scroll {
+    overflow: hidden;
+}
+
 /* Breakpoint spécifique pour iPhone et petits écrans */
 @media (max-width: 480px), (max-device-width: 480px) {
     .services-slider-container {
@@ -264,6 +269,69 @@
     border-radius: 1rem;
     min-height: 350px; /* Ensure consistent height */
     padding: 0 16px; /* plus de flèches, padding réduit */
+}
+
+/* Chatbot mobile fullscreen overlay */
+@media (max-width: 768px) {
+    #chatbot-interface.chat-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100dvh; /* better on mobile keyboards */
+        z-index: 50; /* above nav z-10 */
+        background: #121212; /* solid dark */
+        padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom) 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #chatbot-interface.chat-overlay .info-card {
+        /* Make the card fill the viewport and become a flex column */
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        border-radius: 0; /* flush edges in fullscreen */
+        border-left: none;
+        border-right: none;
+        padding: 0; /* header/input have their own padding */
+        background: transparent;
+        border: none;
+    }
+
+    #chatbot-interface.chat-overlay .chat-header {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background: rgba(179, 136, 255, 0.08);
+        padding: 1rem;
+        border-bottom: 1px solid rgba(179, 136, 255, 0.2);
+    }
+
+    #chatbot-interface.chat-overlay .chat-messages {
+        flex: 1;
+        max-height: none; /* override */
+        overflow-y: auto;
+        padding: 1rem;
+    }
+
+    #chatbot-interface.chat-overlay .chat-input {
+        position: sticky;
+        bottom: 0;
+        z-index: 1;
+        padding: 1rem;
+        border-top: 1px solid rgba(179, 136, 255, 0.2);
+        background: rgba(18, 18, 18, 0.98);
+    }
+
+    #chatbot-interface.chat-overlay .chat-textarea {
+        /* Ensure good tap targets and avoid jump when keyboard opens */
+        min-height: 48px;
+        max-height: 160px; /* allow a bit more lines in fullscreen */
+    }
 }
 
 .services-slider {
