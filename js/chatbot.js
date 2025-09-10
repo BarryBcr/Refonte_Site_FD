@@ -230,6 +230,17 @@ class ChatbotManager {
 
         // Sauvegarder l'état initial (avec message de bienvenue ajouté ensuite)
         this.saveSessionToStorage();
+
+        // dataLayer: chatbot started
+        if (window.dataLayer) {
+            window.dataLayer.push({
+                event: 'chatbot_start',
+                chatbot: {
+                    session_id: this.sessionId,
+                    user_email_hash: this.userEmail ? this.userEmail : undefined
+                }
+            });
+        }
     }
 
     startConversation() {
@@ -306,6 +317,17 @@ class ChatbotManager {
                 timestamp: new Date().toISOString()
             });
             this.saveSessionToStorage();
+
+            // dataLayer: bot message received
+            if (window.dataLayer) {
+                window.dataLayer.push({
+                    event: 'chatbot_message_received',
+                    chatbot: {
+                        session_id: this.sessionId,
+                        message_length: (aiResponse || '').length
+                    }
+                });
+            }
             
             console.log('📚 [DEBUG] Historique final mis à jour, longueur:', this.conversation.length);
             
@@ -490,6 +512,17 @@ class ChatbotManager {
 
         // Scroll vers le bas
         this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+
+        // dataLayer: user message sent
+        if (sender === 'user' && window.dataLayer) {
+            window.dataLayer.push({
+                event: 'chatbot_message_sent',
+                chatbot: {
+                    session_id: this.sessionId,
+                    message_length: (content || '').length
+                }
+            });
+        }
     }
 
     // Ajouter le loader de chat avec 3 points animés
@@ -562,6 +595,16 @@ class ChatbotManager {
         inputs.forEach(input => {
             this.clearFieldError(input);
         });
+
+        // dataLayer: chatbot closed
+        if (window.dataLayer) {
+            window.dataLayer.push({
+                event: 'chatbot_closed',
+                chatbot: {
+                    session_id: this.sessionId
+                }
+            });
+        }
     }
 
     // Auto-resize du textarea
