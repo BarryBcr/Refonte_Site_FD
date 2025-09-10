@@ -40,7 +40,7 @@
                     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                         <div class="text-gray-200">
                             <h3 class="text-lg md:text-xl font-bold futuristic-font text-white mb-1">Cookies & Confidentialité</h3>
-                            <p class="text-gray-300 text-sm md:text-base">Nous utilisons des cookies pour mesurer l'audience et améliorer l'expérience. Vous pouvez accepter, refuser, ou personnaliser vos choix.</p>
+                            <p class="text-gray-300 text-sm md:text-base">Nous utilisons des cookies et technologies similaires, nécessaires au fonctionnement du site et, sous réserve de votre consentement, destinés à mesurer l'audience et améliorer nos services. Vous pouvez accepter, refuser ou personnaliser vos choix à tout moment.</p>
                             <a href="politique-confidentialite.html" class="text-brand underline text-sm">En savoir plus</a>
                         </div>
                         <div class="flex flex-col sm:flex-row gap-2 md:gap-3">
@@ -109,8 +109,8 @@
                     <div class="p-4 bg-[#2d2d2d] rounded-lg border border-[rgba(179,136,255,0.2)]">
                         <div class="flex items-center justify-between">
                             <div>
-                                <h4 class="font-medium text-white">Publicité (Ads)</h4>
-                                <p class="text-gray-300 text-sm">Personnalisation publicitaire.</p>
+                                <h4 class="font-medium text-white">Services tiers (Ads)</h4>
+                                <p class="text-gray-300 text-sm">Activation de technologies fournies par des partenaires.</p>
                             </div>
                             <label class="inline-flex items-center cursor-pointer">
                                 <input id="fd-toggle-ads" type="checkbox" class="sr-only">
