@@ -157,6 +157,18 @@
                 console.error('❌ initializeContactForm function not found');
             }
         })();
+
+        // Toggle avantages (click to reveal details)
+        document.addEventListener('click', (e) => {
+            const item = e.target.closest('.advantage-item');
+            if (item) {
+                item.classList.toggle('active');
+                const detail = item.nextElementSibling;
+                if (detail && detail.classList.contains('advantage-detail')) {
+                    detail.classList.toggle('hidden');
+                }
+            }
+        });
     </script>
 </body>
 </html> 

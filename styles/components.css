@@ -127,12 +127,18 @@
     border-radius: 0.5rem;
     border: 1px solid rgba(179, 136, 255, 0.2);
     margin-bottom: 1rem;
+    cursor: pointer;
 }
 
 .advantage-item svg {
     color: #b388ff;
     margin-right: 0.75rem;
     flex-shrink: 0;
+}
+
+.advantage-item.active {
+    background: rgba(179, 136, 255, 0.18);
+    border-color: rgba(179, 136, 255, 0.5);
 }
 
 /* Contact info */
