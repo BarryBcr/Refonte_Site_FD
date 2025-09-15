@@ -58,11 +58,11 @@
                         Découvrez comment nos solutions clés – de la publicité ciblée sur Meta aux campagnes email percutantes et à l’automatisation intelligente – propulsent votre entreprise vers de nouveaux sommets.
                     </p>
                     <div class="flex flex-col sm:flex-row justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4">
-                        <a href="#services" class="px-8 py-3 brand-gradient text-white font-medium rounded-lg glow hover:opacity-90 transition duration-300 text-center">
+                        <a id="cta-hero-services" href="#services" class="px-8 py-3 brand-gradient text-white font-medium rounded-lg glow hover:opacity-90 transition duration-300 text-center">
                             Découvrir nos services
                         </a>
-                        <a href="#contact" class="px-8 py-3 bg-transparent border border-brand text-brand font-medium rounded-lg hover:bg-brand hover:text-dark transition duration-300 text-center">
-                            Nous contacter
+                        <a id="cta-hero-ia" href="#contact" class="px-8 py-3 bg-transparent border border-brand text-brand font-medium rounded-lg hover:bg-brand hover:text-dark transition duration-300 text-center">
+                            Parler à notre IA
                         </a>
                     </div>
                 </div>
@@ -168,6 +168,23 @@
                     detail.classList.toggle('hidden');
                 }
             }
+        });
+
+        // CTA tracking + focus IA
+        document.getElementById('cta-hero-services')?.addEventListener('click', () => {
+            if (window.dataLayer) {
+                window.dataLayer.push({ event: 'cta_click', section: 'hero', cta: 'services' });
+            }
+        });
+        document.getElementById('cta-hero-ia')?.addEventListener('click', () => {
+            if (window.dataLayer) {
+                window.dataLayer.push({ event: 'cta_click', section: 'hero', cta: 'ia' });
+            }
+            // focus sur le prénom du chatbot après navigation
+            setTimeout(() => {
+                const input = document.getElementById('chatbot-name');
+                if (input) input.focus();
+            }, 400);
         });
     </script>
 </body>
