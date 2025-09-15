@@ -8,28 +8,28 @@
     justify-content: center;
     align-items: center;
     overflow: visible; /* Permettre aux cartes de dépasser */
-    padding: 50px 0; /* Ajouter du padding pour éviter les débordements */
+    padding: 90px 0; /* Ajouter du padding pour éviter les débordements */
 }
 
 /* Ajustement de la hauteur pour mobile */
 @media (max-width: 768px) {
     .testimonials-stack-container {
         min-height: 400px;
-        padding: 40px 0;
+        padding: 80px 0;
     }
 }
 
 @media (max-width: 480px) {
     .testimonials-stack-container {
         min-height: 350px;
-        padding: 30px 0;
+        padding: 60px 0;
     }
 }
 
 /* Padding mobile pour cohérence avec les services */
 @media (max-width: 480px) {
     .testimonials-stack-container {
-        padding: 30px 24px; /* Même padding que les services mobile */
+        padding: 60px 24px; /* Même padding que les services mobile */
     }
 }
 
