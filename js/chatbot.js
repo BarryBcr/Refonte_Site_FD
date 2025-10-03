@@ -418,8 +418,8 @@ class ChatbotManager {
                 data = JSON.parse(responseText);
                 console.log('🔍 [DEBUG] JSON parsé:', data);
             } catch (parseError) {
-                console.error('❌ [DEBUG] Erreur parsing JSON:', parseError);
-                console.log('📄 [DEBUG] Contenu brut qui n\'est pas du JSON:', responseText);
+                console.warn('⚠️ [DEBUG] Réponse en texte brut (pas JSON):', parseError.message);
+                console.log('📄 [DEBUG] Contenu brut reçu:', responseText);
                 // Si ce n'est pas du JSON, retourner le texte brut
                 return responseText || 'Réponse reçue du serveur';
             }
