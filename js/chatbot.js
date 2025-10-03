@@ -232,8 +232,7 @@ class ChatbotManager {
         this.saveSessionToStorage();
 
         // dataLayer: chatbot started
-        // Désactivé temporairement pour tester si cela cause le rechargement
-        if (window.dataLayer && false) {
+        if (window.dataLayer) {
             window.dataLayer.push({
                 event: 'chatbot_start',
                 chatbot: {
