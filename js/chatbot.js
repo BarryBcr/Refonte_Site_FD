@@ -652,16 +652,15 @@ class ChatbotManager {
 
     getWebhookUrl() {
         const hostname = window.location.hostname;
-        const protocol = window.location.protocol;
         
         // Production (domaine personnalisé)
         if (hostname === 'flairdigital.fr' || hostname === 'www.flairdigital.fr') {
-            return 'http://92.113.25.121:3000/chat/message';
+            return 'https://api.flairdigital.fr/chat/message';
         }
         
-        // GitHub Pages (boubacarbarry.github.io)
+        // GitHub Pages
         if (hostname === 'boubacarbarry.github.io') {
-            return 'http://92.113.25.121:3000/chat/message';
+            return 'https://api.flairdigital.fr/chat/message';
         }
         
         // Développement local
