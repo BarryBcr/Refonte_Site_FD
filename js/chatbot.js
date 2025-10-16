@@ -16,8 +16,8 @@ class ChatbotManager {
         this.conversation = [];
         this.isProcessing = false;
         
-        // URL du webhook n8n
-        this.webhookUrl = 'https://n8n.boubacarbarry.fr/webhook/483bf213-3064-4dd9-8006-4d7bf9fe4cc9/chat';
+        // Configuration dynamique de l'URL
+        this.webhookUrl = this.getWebhookUrl();
         
         console.log('🔧 [DEBUG] ChatbotManager initialisé');
         console.log('🌐 [DEBUG] URL webhook configurée:', this.webhookUrl);
@@ -435,9 +435,19 @@ class ChatbotManager {
                 keys: Object.keys(data)
             });
 
+            // Ajouter les métadonnées si disponibles
+            if (data.metadata) {
+                console.log('📊 Métadonnées:', data.metadata);
+            }
+
+            // ✅ Nouveau - utilise directement output
+            if (data.output) {
+                return data.output;
+            }
+
+            // ❌ Actuel - cherche response/message/content/output
             if (data.response || data.message || data.content || data.output) {
                 const finalResponse = data.response || data.message || data.content || data.output;
-                console.log('✅ [DEBUG] Réponse extraite:', finalResponse);
                 return finalResponse;
             } else if (typeof data === 'string') {
                 console.log('✅ [DEBUG] Réponse string directe:', data);
@@ -638,6 +648,24 @@ class ChatbotManager {
         this.chatInput.style.height = '48px'; // Hauteur d'une ligne
         this.chatInput.style.overflowY = 'hidden';
         this.chatInput.scrollTop = 0;
+    }
+
+    getWebhookUrl() {
+        const hostname = window.location.hostname;
+        const protocol = window.location.protocol;
+        
+        // Production (domaine personnalisé)
+        if (hostname === 'flairdigital.fr' || hostname === 'www.flairdigital.fr') {
+            return 'http://92.113.25.121:3000/chat/message';
+        }
+        
+        // GitHub Pages (boubacarbarry.github.io)
+        if (hostname === 'boubacarbarry.github.io') {
+            return 'http://92.113.25.121:3000/chat/message';
+        }
+        
+        // Développement local
+        return 'http://localhost:3000/chat/message';
     }
 }
 

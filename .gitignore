@@ -23,3 +23,12 @@ build/
 # Fichiers de documentation (toujours ignorés)
 PROJET_SUIVI.md
 CHATBOT_SPECIFICATIONS.md
+node_modules/
+chatbot/node_modules/
+.env
+node_modules/
+chatbot/node_modules/
+.env
+chatbot/.env
+chatbot/chatbot-fd-key.json
+*.log
